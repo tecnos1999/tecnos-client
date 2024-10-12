@@ -1,10 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
 import BurgerSubMeniu from "./BurgerSubMeniu";
 import BurgerLink from "./BurgerLink";
-import ButtonFull from "./ButtonFull";
 import Image from "next/image";
 import logo from "@/assets/logo.png";
 import ButtonClose from "./ButtonClose";
@@ -39,7 +37,7 @@ const links = [
   { text: "Servicii", url: "/servicii" },
 ];
 
-const BurgerBar: React.FC<BurgerBarProps> = ({ isOpen, onClose, isAuth }) => {
+const BurgerBar: React.FC<BurgerBarProps> = ({ isOpen, onClose }) => {
   return (
     <motion.section
       className="fixed top-0 left-0 w-full mx-auto max-w-screen-xl  h-dvh bg-white z-50 flex flex-col p-4 overflow-y-auto"

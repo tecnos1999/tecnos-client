@@ -21,7 +21,6 @@ interface BurgerSubMeniuProps {
 
 const BurgerSubMeniu: React.FC<BurgerSubMeniuProps> = ({
   text,
-  url,
   submenu,
   onClose,
 }) => {
