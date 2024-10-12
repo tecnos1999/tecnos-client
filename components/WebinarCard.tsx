@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { StaticImageData } from 'next/image';
+import Image from 'next/image';
 
 interface WebinarCardProps {
   date: string;
@@ -26,9 +27,11 @@ const WebinarCard: React.FC<WebinarCardProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <img
+      <Image
         src={imageUrl.src}
         alt={title}
+        width={500}
+        height={300}
         className="w-full h-64 object-cover transition-opacity duration-500 group-hover:opacity-50"
       />
 

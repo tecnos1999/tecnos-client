@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface QuoteCardProps {
   quote: string;
@@ -21,13 +22,13 @@ const QuoteCard: React.FC<QuoteCardProps> = ({ quote, imageSrc, author, job }) =
         <span className="absolute text-6xl text-gray-200 bottom-0 right-3">&#10078;</span>
       </blockquote>
    
-      <motion.img
+      <Image
         src={imageSrc}
         alt={author}
         className="w-full h-48 object-cover"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        width={500}
+        height={300}
+
       />
 
       <div className="bg-white px-4 py-2 text-center">

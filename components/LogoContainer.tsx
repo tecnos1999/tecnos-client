@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const logos = [
   "https://via.placeholder.com/150x50.png?text=Logo+1",
@@ -31,13 +32,13 @@ const LogoContainer: React.FC = () => {
       >
         {logos.map((logo, index) => (
           <div key={index} className="flex-shrink-0">
-            <img src={logo} alt={`Logo ${index + 1}`} className="w-[250px] h-[150px]" />
+            <Image src={logo} alt={`Logo ${index + 1}`}  width={250} height={150} />
           </div>
         ))}
  
         {logos.map((logo, index) => (
           <div key={index + logos.length} className="flex-shrink-0">
-            <img src={logo} alt={`Logo ${index + 1}`} className="w-[250px] h-[150px]" />
+            <Image src={logo} alt={`Logo ${index + 1}`} width={250} height={150} />
           </div>
         ))}
 
