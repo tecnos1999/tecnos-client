@@ -1,6 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+'use client'
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { StaticImageData } from "next/image";
+import Image from "next/image";
 
 interface EventCardProps {
   image: StaticImageData;
@@ -38,15 +41,12 @@ const EventCard: React.FC<EventCardProps> = ({
           transition={{ duration: 0.5 }}
         >
           <a href="#">
-            <motion.img
-              src="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"
+            <Image
+              src={image}
               alt="Ice Cream Sundae Party"
               className="w-full h-full object-cover"
-              animate={{
-                scale: isHovered ? 1.1 : 1,
-                opacity: isHovered ? 0.6 : 1,
-              }}
-              transition={{ duration: 0.5 }}
+              width={500}
+              height={300}
             />
           </a>
         </motion.header>
