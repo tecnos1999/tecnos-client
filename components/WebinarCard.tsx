@@ -7,7 +7,6 @@ interface WebinarCardProps {
   title: string;
   duration: string;
   name: string;
-  description: string;
   time: string;
   imageUrl: StaticImageData;
 }
@@ -17,7 +16,6 @@ const WebinarCard: React.FC<WebinarCardProps> = ({
   title,
   duration,
   name,
-  description,
   time,
   imageUrl,
 }) => {

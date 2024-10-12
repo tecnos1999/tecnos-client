@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import BurgerLink from "./BurgerLink";
 
 interface SubMenuItem {
   text: string;

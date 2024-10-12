@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { StaticImageData } from "next/image";
-import Image from "next/image";
 
 interface EventCardProps {
   image: StaticImageData;

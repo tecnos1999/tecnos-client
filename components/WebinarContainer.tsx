@@ -180,7 +180,6 @@ const WebinarContainer: React.FC = () => {
                 title={event.title}
                 duration={event.duration}
                 name={event.name}
-                description={event.description}
                 time={event.time}
                 imageUrl={webinar1}
               />
