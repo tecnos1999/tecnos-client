@@ -1,54 +1,54 @@
-version: '3.8'
+name: CD - Deploy Tecnos-Client 
 
-networks:
-  mynet:
-    driver: bridge
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
-volumes:
-  db_data:
+permissions:
+  contents: write
+  packages: write
 
-services:
-  mysql:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: tecnos_db
-    networks:
-      - mynet
-    ports:
-      - "3307:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 1
-  tecnos-service:
-    image: tecnos1999/tecnos-server:12.10.2024.11.57.22
-    networks:
-      - mynet
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-    ports:
-      - "8081:8080"
-    depends_on:
-      - mysql
-  clientapp:
-    image: tecnos1999/tecnos-client:latest
-    networks:
-      - mynet
-    ports:
-      - "80:80"
-    depends_on:
-      - tecnos-server
-    environment:
-      - REACT_APP_ENV=prod
-  # nginx:
-  #   image: floredenis2001/path-pilot-proxy:v2
-  #   networks:
-  #     - mynet
-  #   ports:
-  #     - "8080:80"
-  #   depends_on:
-  #     - clientapp
-  #     - path-pilot-service
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set build number
+        id: build-number
+        run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_ENV
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Build and push
+        run: |
+          chmod +x ci/build-publish.sh
+          USERNAME=tecnos1999 \
+          REPO=tecnos-client \
+          TAG=${{ env.BUILD_NUMBER }} \
+          ci/build-publish.sh ./
+
+      - name: Checkout other repository
+        uses: actions/checkout@v2
+        with:
+          repository: 'tecnos1999/docker-compose-tecnos'
+          token: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
+          path: 'docker-compose-tecnos'
+
+      - name: Update and commit app version in docker-compose.yml in other repository
+        run: |
+          cd docker-compose-tecnos/
+          echo -e "Current ./docker-compose.yaml\n$(cat docker-compose.yaml)"
+          sed -i -E 's_(tecnos1999/tecnos-client:)([^"]*)_\1'${{ env.BUILD_NUMBER }}'_' docker-compose.yaml
+          echo -e "Updated ./docker-compose.yaml\n$(cat docker-compose.yaml)"
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "new app version: ${{ env.BUILD_NUMBER }}"
+          git push origin HEAD:main
