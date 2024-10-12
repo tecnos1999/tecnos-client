@@ -1,0 +1,54 @@
+version: '3.8'
+
+networks:
+  mynet:
+    driver: bridge
+
+volumes:
+  db_data:
+
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tecnos_db
+    networks:
+      - mynet
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 1
+  tecnos-service:
+    image: tecnos1999/tecnos-server:12.10.2024.11.57.22
+    networks:
+      - mynet
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql
+  clientapp:
+    image: tecnos1999/tecnos-client:latest
+    networks:
+      - mynet
+    ports:
+      - "80:80"
+    depends_on:
+      - tecnos-server
+    environment:
+      - REACT_APP_ENV=prod
+  # nginx:
+  #   image: floredenis2001/path-pilot-proxy:v2
+  #   networks:
+  #     - mynet
+  #   ports:
+  #     - "8080:80"
+  #   depends_on:
+  #     - clientapp
+  #     - path-pilot-service
