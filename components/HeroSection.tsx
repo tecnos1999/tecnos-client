@@ -5,8 +5,8 @@ import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
 
 const videoUrls = [
-  "/assets/backgroundVideo.mp4",
-  "/assets/backgroundVideo2.mp4"
+  "https://courses-platform.s3.us-east-005.backblazeb2.com/backgroundVideo.mp4",
+  "https://courses-platform.s3.us-east-005.backblazeb2.com/backgroundVideo2.mp4"
 ];
 
 const HeroSection = () => {
