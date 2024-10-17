@@ -1,24 +1,27 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faAngleRight} from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
-import video from "@/assets/backgroundVideo.mp4";
-import video2 from "@/assets/backgroundVideo2.mp4";
 
 const videoUrls = [
-  video,video2
+  "/assets/backgroundVideo.mp4",
+  "/assets/backgroundVideo2.mp4"
 ];
 
 const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? videoUrls.length - 1 : prevIndex - 1));
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? videoUrls.length - 1 : prevIndex - 1
+    );
   };
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === videoUrls.length - 1 ? 0 : prevIndex + 1));
+    setCurrentIndex((prevIndex) =>
+      prevIndex === videoUrls.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
   return (
@@ -38,14 +41,14 @@ const HeroSection = () => {
 
       <button
         onClick={handlePrev}
-        className="absolute left-4 md:left-20 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-30 text-white px-3 py-1 rounded-full focus:outline-none shadow-lg hover:bg-opacity-60  transition duration-300 ease-in-out"
+        className="absolute left-4 md:left-20 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-30 text-white px-3 py-1 rounded-full focus:outline-none shadow-lg hover:bg-opacity-60 transition duration-300 ease-in-out"
       >
         <FontAwesomeIcon icon={faAngleLeft} size="lg" />
       </button>
 
       <button
         onClick={handleNext}
-        className="absolute right-4 md:right-20 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-30 text-white px-3 py-1 rounded-full focus:outline-none shadow-lg hover:bg-opacity-60  transition duration-300 ease-in-out"
+        className="absolute right-4 md:right-20 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-30 text-white px-3 py-1 rounded-full focus:outline-none shadow-lg hover:bg-opacity-60 transition duration-300 ease-in-out"
       >
         <FontAwesomeIcon icon={faAngleRight} size="lg" />
       </button>
