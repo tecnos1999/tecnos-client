@@ -163,7 +163,7 @@ const WebinarContainer: React.FC = () => {
         <FontAwesomeIcon icon={faChevronRight} className="text-sm sm:text-xl" />
       </motion.div>
 
-      <AnimatePresence mode="wait">
+      <AnimatePresence >
         <div className="overflow-x-scroll md:overflow-hidden flex md:items-center md:justify-center gap-6">
           {currentEvents.map((event, index) => (
             <motion.div
