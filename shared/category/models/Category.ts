@@ -5,4 +5,5 @@ export interface Category{
     createdAt: Date;
     updatedAt: Date;
     subCategories: Subcategory[];
+    mainSection: string;
 }
