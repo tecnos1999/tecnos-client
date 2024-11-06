@@ -17,9 +17,9 @@ const nextConfig = {
     images: {
       domains: ['s3-us-west-2.amazonaws.com', 'via.placeholder.com'],
     },
-    assetPrefix: process.env.REACT_APP_ENV === 'development' 
-    ? 'http://tecnos-gateway:8080/ui-static' 
-    : 'http://tecnos-gateway:8080/ui-static',
+    assetPrefix: process.env.REACT_APP_ENV === 'development'
+        ? 'http://tecnos-gateway/ui-static'
+        : 'http://tecnos-gateway/ui-static',
   };
   
   export default nextConfig;
