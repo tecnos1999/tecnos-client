@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
 
-# Install dependencies
+# Install dependencies (including sharp for image optimization)
 RUN npm install && npm install sharp
 
 # Copy the rest of the application code
@@ -33,19 +33,16 @@ COPY package.json package-lock.json ./
 RUN npm install --only=production
 
 # Copy built files from builder stage
-COPY --from=builder /app/.next .next
-
-# Copy public folder, which Next.js might use for static files
-COPY --from=builder /app/public public
+COPY --from=builder /app/.next ./.next
 
 # Copy node_modules from builder stage (to have all dependencies)
 COPY --from=builder /app/node_modules node_modules
 
 # Debugging step to verify the copied build files in runner
-RUN ls -la .next && ls -la public
+RUN ls -la .next
 
 # Expose the port on which the Next.js app will run
-EXPOSE 3000
+EXPOSE 3001
 
 # Start the Next.js application
 CMD ["npm", "run", "start"]
