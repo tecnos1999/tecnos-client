@@ -42,7 +42,7 @@ COPY --from=builder /app/node_modules node_modules
 RUN ls -la .next
 
 # Expose the port on which the Next.js app will run
-EXPOSE 3001
+EXPOSE 3000
 
 # Start the Next.js application
 CMD ["npm", "run", "start"]
