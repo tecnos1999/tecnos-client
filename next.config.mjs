@@ -18,7 +18,7 @@ const nextConfig = {
       domains: ['s3-us-west-2.amazonaws.com', 'via.placeholder.com'],
     },
     assetPrefix: process.env.REACT_APP_ENV === 'development' 
-    ? 'http://localhost:8080/ui-static' 
+    ? 'http://tecnos-gateway:8080/ui-static' 
     : 'http://tecnos-gateway:8080/ui-static',
   };
   
