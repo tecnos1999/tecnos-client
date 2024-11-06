@@ -35,7 +35,7 @@ const Header = () => {
         }`}
       >
         <div className="col-span-1">
-          <LogoBox />
+          {/* <LogoBox /> */}
         </div>
         <div className="hidden md:flex md:flex-col col-span-2  justify-center">
           <NavBar />
