@@ -5,7 +5,7 @@ const nextConfig = {
             use: {
                 loader: 'file-loader',
                 options: {
-                    publicPath: '/ui-static/videos/',
+                    publicPath: `${process.env.REACT_APP_ENV === 'development' ? 'http://localhost:8080/ui-static' : 'http://tecnos-gateway/ui-static'}/videos/`,
                     outputPath: 'static/videos/',
                     name: '[name].[hash].[ext]',
                 },

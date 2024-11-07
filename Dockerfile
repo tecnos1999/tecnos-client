@@ -33,6 +33,7 @@ RUN npm install --only=production
 # Copy the build output and dependencies from the builder stage
 COPY --from=builder /app/.next .next
 COPY --from=builder /app/node_modules node_modules
+COPY --from=builder /app/.next/static .next/static 
 
 # Expose the port on which the Next.js app will run
 EXPOSE 3000
