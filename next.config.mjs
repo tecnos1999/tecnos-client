@@ -19,7 +19,7 @@ const nextConfig = {
     assetPrefix: process.env.REACT_APP_ENV === 'development'
         ? 'http://localhost:80/ui-static'
         : process.env.REACT_APP_ENV === 'production'
-            ? 'http://tecnos-gateway/ui-static'
+            ? 'http://84.46.241.251/ui-static'
             : '',
 };
 
