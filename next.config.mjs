@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
     webpack(config, options) {
         config.module.rules.push({
@@ -19,7 +18,9 @@ const nextConfig = {
     },
     assetPrefix: process.env.REACT_APP_ENV === 'development'
         ? 'http://localhost:8080/ui-static'
-        : 'http://tecnos-gateway/ui-static',
+        : process.env.REACT_APP_ENV === 'production'
+            ? 'http://tecnos-gateway/ui-static'
+            : '',
 };
 
 export default nextConfig;

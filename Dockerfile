@@ -16,12 +16,13 @@ COPY . .
 RUN npm run build
 
 # Debugging step to verify the build output
-RUN ls -la .next
+RUN ls -la .next/static
 
 # Stage 2: Serve the application
 FROM node:18-alpine AS runner
 
 ENV NODE_ENV=production
+ENV REACT_APP_ENV=production
 
 WORKDIR /app
 
