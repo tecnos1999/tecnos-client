@@ -5,27 +5,36 @@ WORKDIR /app
 
 # Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
+
+# Install dependencies
 RUN npm install && npm install sharp
 
-# Copy application code and build
+# Copy the rest of the application code
 COPY . .
+
+# Build the application
 RUN npm run build
+
+# Debugging step to verify the build output
+RUN ls -la .next
 
 # Stage 2: Serve the application
 FROM node:18-alpine AS runner
 
 ENV NODE_ENV=production
+
 WORKDIR /app
 
 # Install only production dependencies
 COPY package.json package-lock.json ./
 RUN npm install --only=production
 
-# Copy built files and serve them from /ui-static
-COPY --from=builder /app/.next/static /app/ui-static/_next/static
+# Copy the build output and dependencies from the builder stage
+COPY --from=builder /app/.next .next
 COPY --from=builder /app/node_modules node_modules
 
-# Expose port
+# Expose the port on which the Next.js app will run
 EXPOSE 3000
 
+# Start the Next.js application
 CMD ["npm", "run", "start"]
