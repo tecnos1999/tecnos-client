@@ -5,7 +5,7 @@ const nextConfig = {
             use: {
                 loader: 'file-loader',
                 options: {
-                    publicPath: `${process.env.REACT_APP_ENV === 'development' ? 'http://localhost:8080/ui-static' : 'http://84.46.241.251:8080/ui-static'}/videos/`,
+                    publicPath: `${process.env.REACT_APP_ENV === 'development' ? 'http://localhost:8080/ui-static' : 'http://89.33.44.227:8080/ui-static'}/videos/`,
                     outputPath: 'static/videos/',
                     name: '[name].[hash].[ext]',
                 },
@@ -18,7 +18,7 @@ const nextConfig = {
     },
     assetPrefix: process.env.REACT_APP_ENV === 'development'
         ? 'http://localhost:8080/ui-static'
-        : 'http://84.46.241.251:8080/ui-static',
+        : 'http://89.33.44.227:8080/ui-static',
 
 };
 
