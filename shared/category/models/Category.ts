@@ -1,3 +1,4 @@
+import { ItemCategory } from "@/shared/itemcategory/models/ItemCategory";
 import { Subcategory } from "@/shared/subcategory/models/Subcategory";
 
 export interface Category{
@@ -5,5 +6,6 @@ export interface Category{
     createdAt: Date;
     updatedAt: Date;
     subCategories: Subcategory[];
+    itemCategories:ItemCategory[]; 
     mainSection: string;
 }

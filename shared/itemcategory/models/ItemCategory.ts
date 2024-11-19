@@ -3,4 +3,5 @@ export interface ItemCategory {
     createdAt: Date;
     updatedAt: Date;
     subcategoryName: string;
+    categoryName: string;
 }
