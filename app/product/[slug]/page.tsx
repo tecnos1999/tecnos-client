@@ -1,7 +1,7 @@
 'use client';
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import gsap from 'gsap';
+import { useInView } from 'react-intersection-observer';
 
 const product = {
   title: 'Produs Inovator',
@@ -28,23 +28,20 @@ const product = {
 
 const ProductPage = () => {
   const imageSectionRef = useRef<HTMLDivElement>(null);
-  const contentSectionRef = useRef<HTMLDivElement>(null);
+  const { ref: contentRef, inView: contentInView } = useInView({ threshold: 0 });
 
   useEffect(() => {
     const imageSection = imageSectionRef.current;
-    const contentSection = contentSectionRef.current;
-
-    if (imageSection && contentSection) {
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: contentSection,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true,
-        },
-      }).to(imageSection, { y: () => contentSection.clientHeight - imageSection.clientHeight });
+    if (imageSection) {
+      if (contentInView) {
+        imageSection.style.position = 'relative';
+        imageSection.style.top = '0';
+      } else {
+        imageSection.style.position = 'fixed';
+        imageSection.style.top = '20px';
+      }
     }
-  }, []);
+  }, [contentInView]);
 
   return (
     <div className="mt-[104px] md:mt-[188px] px-6 lg:px-20 min-h-screen bg-gradient-to-br from-gray-100 to-gray-50 p-6 lg:p-12">
@@ -73,7 +70,7 @@ const ProductPage = () => {
 
         {/* Partea cu descrierea produsului și restul conținutului */}
         <motion.div
-          ref={contentSectionRef}
+          ref={contentRef}
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}

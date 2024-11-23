@@ -18,7 +18,6 @@ export default function Home() {
       <WebinarContainer />
       <TestimonialContainer />
       <LogoContainer />
-      
     </main>
   );
 }
