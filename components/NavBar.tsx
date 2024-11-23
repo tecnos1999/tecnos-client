@@ -96,7 +96,6 @@ const Navbar: React.FC = () => {
             return (
               <div
                 key={section}
-                onClick={() => handleMainSectionClick(section)}
                 onMouseEnter={() => handleSectionHover(section)}
                 onMouseLeave={handleMouseLeave}
               >
@@ -106,6 +105,8 @@ const Navbar: React.FC = () => {
                       ? "text-red-700"
                       : "text-gray-500 hover:text-red-700"
                   }`}
+                onClick={() => handleMainSectionClick(section)}
+
                 
                 >
                   {MainSectionLabels[section]}
