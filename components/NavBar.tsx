@@ -53,7 +53,21 @@ const Navbar: React.FC = () => {
       subCategory: encodeURIComponent(subCategory),
     });
 
-    router.push(determinePath(`/products?${queryParams.toString()}`));
+    router.push(determinePath(`products?${queryParams.toString()}`));
+  };
+
+  const handleMainSectionClick = (section: MainSection) => {
+    const routeMap: Record<MainSection, string> = {
+      [MainSection.ACASA]: "/",
+      [MainSection.PRODUSE]: "/",
+      [MainSection.APLICATII_TEHNOLOGIE]: "/aplicatii&tehnologie",
+      [MainSection.PARTENERI]: "/parteneri",
+    };
+
+    const route = routeMap[section];
+    if (route) {
+      router.push(determinePath(route));
+    }
   };
 
   const handleItemCategoryClick = (
@@ -67,7 +81,7 @@ const Navbar: React.FC = () => {
       itemCategory: encodeURIComponent(itemCategory),
     });
 
-    router.push(determinePath(`/products?${queryParams.toString()}`));
+    router.push(determinePath(`products?${queryParams.toString()}`));
   };
 
   return (
@@ -82,6 +96,7 @@ const Navbar: React.FC = () => {
             return (
               <div
                 key={section}
+                onClick={() => handleMainSectionClick(section)}
                 onMouseEnter={() => handleSectionHover(section)}
                 onMouseLeave={handleMouseLeave}
               >
@@ -91,6 +106,7 @@ const Navbar: React.FC = () => {
                       ? "text-red-700"
                       : "text-gray-500 hover:text-red-700"
                   }`}
+                
                 >
                   {MainSectionLabels[section]}
                   {hoveredSection === section && hasCategories && (
