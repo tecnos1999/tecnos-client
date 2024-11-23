@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
 import ProductService from "@/shared/products/service/ProductService";
 import { ProductDTO } from "@/shared/products/dto/ProductDTO";
 
@@ -60,11 +61,7 @@ const CardSectionProducts: React.FC<Props> = ({
   }
 
   if (error) {
-    return (
-      <div className="text-center py-12 text-red-600">
-        {error}
-      </div>
-    );
+    return <div className="text-center py-12 text-red-600">{error}</div>;
   }
 
   if (products.length === 0) {
@@ -82,15 +79,15 @@ const CardSectionProducts: React.FC<Props> = ({
           <motion.div
             key={product.sku}
             className="relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105"
-            style={{ width: "270px" }} 
+            style={{ width: "270px" }}
           >
             <div className="relative w-full h-64 overflow-hidden bg-gray-200">
-              <img
-                src={product.images?.[0]?.url || "fallback-image-url.jpg"}
+              <Image
+                src={product.images?.[0]?.url || "/fallback-image-url.jpg"}
                 alt={product.name || "Product Image"}
-                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                fill
+                className="object-cover transition-transform duration-300 hover:scale-105"
               />
-
               <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold py-1 px-3 rounded-full shadow-md">
                 Nou
               </div>
