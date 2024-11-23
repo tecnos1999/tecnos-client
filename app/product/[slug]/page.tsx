@@ -31,7 +31,7 @@ const ProductPage = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const triggerPoint = window.innerHeight / 3;
+      const triggerPoint = 1 / 3;
 
       if (scrollY > triggerPoint) {
         setStickyClass('top-1/3');
