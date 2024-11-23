@@ -1,18 +1,17 @@
 'use client';
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 
 const product = {
   title: 'Produs Inovator',
   sku: 'SKU987654',
   description: [
-    "SmartPulse este o masina de testare dinamica cu actionare electro-mecanica servocontrolata, care foloseste un actuator electro-mecanic fiabil si de inalta performanta. Acesta este proiectat pentru a oferi capacitati de testare precise in cazul incarcarii dinamice la intindere si compresiune si este potrivit pentru testarea unei game diverse de materiale, cum ar fi asfaltul, pamanturile si materialele granulare nelegate. Aceasta functionalitate versatila reduce necesitatea de a utiliza mai multe masini de testare, optimizand utilizarea resurselor.",
-    "SmartPulse ofera o capacitate de testare de 18 kN in sarcina dinamica si 12 kN in sarcina statica. Masina este prevazuta cu un motoreductor, astfel incat nu necesita utilizarea unui compresor sau a unei pompe externe. Spre deosebire de sistemele hidraulice traditionale, care consuma cantitati mari de energie, tehnologia electromecanica a SmartPulse minimizeaza consumul de resurse fara a compromite precizia.",
-    "Cheia designului sau este camera climatica integrata, cu conditionare termoelectrica cu consum redus, care asigura o distributie uniforma a temperaturii. Fereastra mica din fata este proiectata pentru a permite accesul la spatiul de testare cu un impact minim asupra temperaturii camerei. Datorita acestei caracteristici, aparatul mentine temperatura stabila, reducand consumul de energie. Utilizatorii pot monitoriza si ajusta cu usurinta setarile de temperatura prin intermediul PC-ului.",
-    "SmartPulse este completat de controlerul digital CDAS2 de la Pavetest si de software-ul TestLab, oferind o integrare completa pentru o functionare fara intreruperi si o analiza precisa a datelor.",
-    "B265-01: SmartPulse este, de asemenea, disponibil cu o unitate de refrigerare avand un interval de temperatura extins de la -10°C la +60°C (cu sistem de racire cu apa incorporat).",
-    "Alimentare electrica: 230V, 50 Hz, 1ph, 10A / 110V, 60Hz, 1ph, 19A. Dimensiuni: 1900(h) x 1000(d) x 850(l) mm. Greutate: 380 kg aprox.",
+    "SmartPulse este o masina de testare dinamica cu actionare electro-mecanica servocontrolata...",
+    "SmartPulse ofera o capacitate de testare de 18 kN in sarcina dinamica si 12 kN in sarcina statica...",
+    "Cheia designului sau este camera climatica integrata, cu conditionare termoelectrica cu consum redus...",
+    "SmartPulse este completat de controlerul digital CDAS2 de la Pavetest si de software-ul TestLab...",
+    "B265-01: SmartPulse este, de asemenea, disponibil cu o unitate de refrigerare...",
+    "Alimentare electrica: 230V, 50 Hz, 1ph, 10A / 110V, 60Hz, 1ph, 19A. Dimensiuni: 1900(h) x 1000(d)...",
   ],
   images: [
     'https://via.placeholder.com/600',
@@ -23,31 +22,37 @@ const product = {
   technicalSheet: '#',
   catalog: '#',
   documentation: '#',
-  video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', 
+  video: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
 };
 
 const ProductPage = () => {
-  const imageSectionRef = useRef<HTMLDivElement>(null);
-  const { ref: contentRef, inView: contentInView } = useInView({ threshold: 0 });
+  const [stickyClass, setStickyClass] = useState('top-0');
 
   useEffect(() => {
-    const imageSection = imageSectionRef.current;
-    if (imageSection) {
-      if (contentInView) {
-        imageSection.style.position = 'relative';
-        imageSection.style.top = '0';
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const triggerPoint = window.innerHeight / 3;
+
+      if (scrollY > triggerPoint) {
+        setStickyClass('top-1/3');
       } else {
-        imageSection.style.position = 'fixed';
-        imageSection.style.top = '20px';
+        setStickyClass('top-0');
       }
-    }
-  }, [contentInView]);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
-    <div className="mt-[104px] md:mt-[188px] px-6 lg:px-20 min-h-screen bg-gradient-to-br from-gray-100 to-gray-50 p-6 lg:p-12">
-      <div className="max-w-screen-xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Partea cu imaginea și miniaturile */}
-        <div ref={imageSectionRef} className="bg-gray-100 p-6 flex flex-col items-center justify-start">
+    <section className="mt-[104px] md:mt-[188px] px-6 lg:px-20 min-h-screen bg-gradient-to-br from-gray-100 to-gray-50 p-6 lg:p-12">
+      <div className="max-w-screen-xl mx-auto bg-white rounded-xl shadow-2xl grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div
+          className={`hidden lg:flex bg-gray-100 p-6 h-[40%] sticky ${stickyClass} flex-col items-center justify-start transition-all duration-500`}
+        >
           <div className="w-full h-96 bg-gray-200 rounded-lg overflow-hidden">
             <img
               src={product.images[0]}
@@ -68,9 +73,17 @@ const ProductPage = () => {
           </div>
         </div>
 
-        {/* Partea cu descrierea produsului și restul conținutului */}
+        <div className="flex lg:hidden bg-gray-100 p-6 flex-col items-center justify-start">
+          <div className="w-full h-96 bg-gray-200 rounded-lg overflow-hidden">
+            <img
+              src={product.images[0]}
+              alt={product.title}
+              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            />
+          </div>
+        </div>
+
         <motion.div
-          ref={contentRef}
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
@@ -116,7 +129,6 @@ const ProductPage = () => {
             </motion.a>
           </div>
 
-          {/* Videoclipul sub butoane */}
           {product.video && (
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -124,7 +136,9 @@ const ProductPage = () => {
               transition={{ duration: 0.7 }}
               className="w-full mt-6"
             >
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Prezentare Video</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-4">
+                Prezentare Video
+              </h2>
               <div className="aspect-w-16 aspect-h-9">
                 <iframe
                   src={product.video}
@@ -146,7 +160,7 @@ const ProductPage = () => {
           </motion.button>
         </motion.div>
       </div>
-    </div>
+    </section>
   );
 };
 
