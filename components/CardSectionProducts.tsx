@@ -1,49 +1,106 @@
-'use client';
-import React from 'react';
-import { motion } from 'framer-motion';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons'; 
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import ProductService from "@/shared/products/service/ProductService";
+import { ProductDTO } from "@/shared/products/dto/ProductDTO";
 
-const products = [
-  { id: 1, image: 'https://via.placeholder.com/200', title: 'Aparat automat cu inel si bila pentru bitum Softmatic Matest' },
-  { id: 2, image: 'https://via.placeholder.com/200', title: 'Agitator motorizat cu dulap de securitate pentru echivalent de nisip Matest' },
-  { id: 3, image: 'https://via.placeholder.com/200', title: 'Analizor automat pentru mixturi asfaltice (AMA) Matest' },
-  { id: 4, image: 'https://via.placeholder.com/200', title: 'Analizor de textura CTX AMETEK Brookfield' },
-  { id: 5, image: 'https://via.placeholder.com/200', title: 'Aparat cu coloana rezonanta de tip Hardin – GDS Instruments' },
-  { id: 6, image: 'https://via.placeholder.com/200', title: 'Aparat de masurare punct de roua DMT152 Vaisala' },
-  { id: 1, image: 'https://via.placeholder.com/200', title: 'Aparat automat cu inel si bila pentru bitum Softmatic Matest' },
-  { id: 2, image: 'https://via.placeholder.com/200', title: 'Agitator motorizat cu dulap de securitate pentru echivalent de nisip Matest' },
-  { id: 3, image: 'https://via.placeholder.com/200', title: 'Analizor automat pentru mixturi asfaltice (AMA) Matest' },
-  { id: 4, image: 'https://via.placeholder.com/200', title: 'Analizor de textura CTX AMETEK Brookfield' },
-  { id: 5, image: 'https://via.placeholder.com/200', title: 'Aparat cu coloana rezonanta de tip Hardin – GDS Instruments' },
-  { id: 6, image: 'https://via.placeholder.com/200', title: 'Aparat de masurare punct de roua DMT152 Vaisala' },
-];
+interface Props {
+  category: string;
+  subCategory: string;
+  itemCategory?: string;
+}
 
-const CardSectionProducts = () => {
+const CardSectionProducts: React.FC<Props> = ({
+  category,
+  subCategory,
+  itemCategory,
+}) => {
+  const [products, setProducts] = useState<ProductDTO[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const productService = new ProductService();
+        let data;
+
+        if (itemCategory) {
+          data =
+            await productService.getProductsByCategorySubCategoryAndItemCategory(
+              category,
+              subCategory,
+              itemCategory
+            );
+        } else {
+          data = await productService.getProductsByCategoryAndSubCategory(
+            category,
+            subCategory
+          );
+        }
+
+        setProducts(data);
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
+        setError("Failed to fetch products. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [category, subCategory, itemCategory]);
+
+  if (loading) {
+    return <div className="text-center py-12">Loading products...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12 text-red-600">
+        {error}
+      </div>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className="text-center py-12">
+        No products found for the selected category.
+      </div>
+    );
+  }
+
   return (
-    <div className="flex justify-center items-center py-12 ">
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-screen-xl">
+    <div className="flex justify-center items-center py-12">
+      <div className="flex flex-wrap gap-8 justify-center max-w-screen-xl">
         {products.map((product) => (
           <motion.div
-            key={product.id}
+            key={product.sku}
             className="relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105"
+            style={{ width: "270px" }} 
           >
-            <div className="relative w-full h-48 overflow-hidden bg-gray-200">
+            <div className="relative w-full h-64 overflow-hidden bg-gray-200">
               <img
-                src={product.image}
-                alt={product.title}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                src={product.images?.[0]?.url || "fallback-image-url.jpg"}
+                alt={product.name || "Product Image"}
+                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
               />
+
               <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold py-1 px-3 rounded-full shadow-md">
                 Nou
               </div>
             </div>
-            <div className="p-4 flex flex-col justify-between h-[calc(100%-192px)]">
-              <h3 className="text-base font-semibold text-gray-800 mb-3 line-clamp-2">
-                {product.title}
+            <div className="p-6 flex flex-col justify-between h-[calc(100%-256px)]">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 line-clamp-2">
+                {product.name}
               </h3>
               <div className="flex justify-between items-center">
-                <button className="py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md">
+                <button className="py-2 px-6 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md">
                   Vezi detalii
                 </button>
                 <motion.div

@@ -1,28 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import CategoryService from "@/shared/category/service/CategoryService";
 import { Category } from "@/shared/category/models/Category";
 import { MainSection } from "@/shared/category/enum/MainSection";
 import { MainSectionLabels } from "@/shared/category/enum/MainSectionLabels";
-
-const staggeredMenuVariants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.2 } },
-};
-
-const menuItemVariants = {
-  hidden: { opacity: 0, x: -10 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.5 } },
-};
+import { determinePath } from "@/utils/utils";
 
 const Navbar: React.FC = () => {
   const [hoveredSection, setHoveredSection] = useState<MainSection | null>(null);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [hideTimeout, setHideTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -54,8 +47,31 @@ const Navbar: React.FC = () => {
     setHideTimeout(timeout);
   };
 
+  const handleSubCategoryClick = (category: string, subCategory: string) => {
+    const queryParams = new URLSearchParams({
+      category: encodeURIComponent(category),
+      subCategory: encodeURIComponent(subCategory),
+    });
+
+    router.push(determinePath(`/products?${queryParams.toString()}`));
+  };
+
+  const handleItemCategoryClick = (
+    category: string,
+    subCategory: string,
+    itemCategory: string
+  ) => {
+    const queryParams = new URLSearchParams({
+      category: encodeURIComponent(category),
+      subCategory: encodeURIComponent(subCategory),
+      itemCategory: encodeURIComponent(itemCategory),
+    });
+
+    router.push(determinePath(`/products?${queryParams.toString()}`));
+  };
+
   return (
-    <nav className="bg-white mx-auto hidden md:flex">
+    <nav className="bg-white mx-auto hidden md:flex cursor-pointer">
       <div className="container px-4 h-16 flex justify-between items-center">
         <div className="flex items-center justify-center gap-4">
           {Object.values(MainSection).map((section) => {
@@ -104,26 +120,20 @@ const Navbar: React.FC = () => {
                       transition={{ duration: 0.3 }}
                       onMouseLeave={handleMouseLeave}
                     >
-                      <motion.div
-                        className="w-1/4 bg-gray-100 p-4 border-r border-gray-200"
-                        variants={staggeredMenuVariants}
-                        initial="hidden"
-                        animate="show"
-                        exit="hidden"
-                      >
+                      <motion.div className="w-1/4 bg-gray-100 p-4 border-r border-gray-200">
                         {categories
                           .filter((cat) => cat.mainSection === section)
                           .map((category) => (
-                            <motion.div
+                            <div
                               key={category.name}
                               className="flex items-center justify-between text-gray-800 hover:text-red-700 hover:bg-gray-200 p-3 rounded transition-all"
-                              whileHover={{ scale: 1.03 }}
                               onMouseEnter={() =>
                                 handleCategoryHover(category.name)
                               }
-                              variants={menuItemVariants}
                             >
-                              <button className="text-left w-full font-medium">
+                              <button
+                                className="text-left w-full font-medium"
+                              >
                                 {category.name}
                               </button>
                               {category.subCategories?.length > 0 && (
@@ -132,7 +142,7 @@ const Navbar: React.FC = () => {
                                   size="sm"
                                 />
                               )}
-                            </motion.div>
+                            </div>
                           ))}
                       </motion.div>
 
@@ -144,7 +154,17 @@ const Navbar: React.FC = () => {
                               <div key={subCategory.name} className="space-y-2">
                                 <h3 className="font-semibold text-gray-700 flex items-center">
                                   <span className="text-red-700 mr-2">▸</span>
-                                  {subCategory.name}
+                                  <button
+                                    onClick={() =>
+                                      handleSubCategoryClick(
+                                        hoveredCategory,
+                                        subCategory.name
+                                      )
+                                    }
+                                    className="hover:underline text-left"
+                                  >
+                                    {subCategory.name}
+                                  </button>
                                 </h3>
                                 <ul className="pl-6 space-y-1">
                                   {subCategory.itemCategories?.map((item) => (
@@ -152,7 +172,17 @@ const Navbar: React.FC = () => {
                                       key={item.name}
                                       className="text-gray-600 hover:text-red-700 transition-colors"
                                     >
-                                      <Link href="#">{item.name}</Link>
+                                      <button
+                                        onClick={() =>
+                                          handleItemCategoryClick(
+                                            hoveredCategory,
+                                            subCategory.name,
+                                            item.name
+                                          )
+                                        }
+                                      >
+                                        {item.name}
+                                      </button>
                                     </li>
                                   ))}
                                 </ul>
