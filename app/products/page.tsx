@@ -1,11 +1,10 @@
 'use client';
-import React from "react";
+import React, { Suspense } from "react";
 import CardSectionProducts from "@/components/CardSectionProducts";
 import { useSearchParams } from "next/navigation";
 
-const ProductsPage = () => {
+const ProductsPageContent = () => {
   const searchParams = useSearchParams();
-
   const category = searchParams.get("category");
   const subCategory = searchParams.get("subCategory");
   const itemCategory = searchParams.get("itemCategory");
@@ -27,6 +26,14 @@ const ProductsPage = () => {
         </p>
       )}
     </section>
+  );
+};
+
+const ProductsPage = () => {
+  return (
+    <Suspense fallback={<div>Loading products...</div>}>
+      <ProductsPageContent />
+    </Suspense>
   );
 };
 
