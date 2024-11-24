@@ -19,6 +19,7 @@ const nextConfig = {
     },
 
     
+    
     output: 'export',
     assetPrefix: process.env.REACT_APP_ENV === 'development'
         ? 'http://localhost:8080/ui-static'
