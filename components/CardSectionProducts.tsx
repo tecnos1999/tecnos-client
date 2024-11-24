@@ -87,6 +87,7 @@ const CardSectionProducts: React.FC<Props> = ({
                 alt={product.name || "Product Image"}
                 fill
                 className="object-cover transition-transform duration-300 hover:scale-105"
+                unoptimized
               />
               <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold py-1 px-3 rounded-full shadow-md">
                 Nou
