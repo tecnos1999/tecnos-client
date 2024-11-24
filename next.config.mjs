@@ -14,11 +14,10 @@ const nextConfig = {
         return config;
     },
     images: {
-        domains: ['s3-us-west-2.amazonaws.com', 'via.placeholder.com','localhost','**'],
-       
+        domains: ['s3-us-west-2.amazonaws.com', 'via.placeholder.com', 'localhost', '**'],
     },
 
-    output: 'standalone',
+    output: 'standalone', 
     
     assetPrefix: process.env.REACT_APP_ENV === 'development'
         ? 'http://localhost:8080/ui-static'
