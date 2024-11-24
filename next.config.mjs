@@ -25,6 +25,7 @@ const nextConfig = {
         : 'https://89.33.44.227/ui-static',
   
 
+        
     reactStrictMode: true,
 };
 
