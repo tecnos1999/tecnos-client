@@ -5,6 +5,8 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import ProductService from "@/shared/products/service/ProductService";
 import { ProductDTO } from "@/shared/products/dto/ProductDTO";
+import Link from "next/link";
+import { determinePath } from "@/utils/utils";
 
 interface Props {
   category: string;
@@ -98,9 +100,12 @@ const CardSectionProducts: React.FC<Props> = ({
                 {product.name}
               </h3>
               <div className="flex justify-between items-center">
-                <button className="py-2 px-6 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md">
+                <Link
+                  href={determinePath(`product/${product.sku}`)}
+                  className="py-2 px-6 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md"
+                >
                   Vezi detalii
-                </button>
+                </Link>
                 <motion.div
                   className="w-10 h-10 bg-gray-100 text-gray-800 rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:bg-red-500 hover:text-white transition-all duration-300"
                   whileHover={{ scale: 1.2, rotate: 15 }}
