@@ -8,6 +8,7 @@ interface ProductSidebarProps {
 
 const ProductSidebar: React.FC<ProductSidebarProps> = ({ images, name }) => {
   const [stickyClass, setStickyClass] = useState<string>("top-0");
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,34 +28,69 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({ images, name }) => {
     };
   }, []);
 
+  const handleNext = () => {
+    if (!images) return;
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handlePrev = () => {
+    if (!images) return;
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
+  if (!images || images.length === 0) {
+    return <p className="text-gray-500">No images available</p>;
+  }
+
   return (
     <aside
-      className={`hidden lg:flex flex-col sticky ${stickyClass} min-h-64 h-[30%] p-6 rounded-lg overflow-hidden`}
+      className={`hidden lg:flex flex-col sticky ${stickyClass} h-[30%] w-full p-4 bg-white shadow-lg rounded-lg`}
     >
-      {images && images.length > 0 ? (
-        <>
+      <div className="flex flex-col h-full">
+        <div className="relative h-[70%] w-full rounded-lg overflow-hidden shadow-md">
           <motion.img
-            src={images[0]?.url || "https://via.placeholder.com/600"}
+            key={currentIndex}
+            src={images[currentIndex]?.url || "https://via.placeholder.com/600"}
             alt={name}
-            className="w-full h-64 object-contain rounded-lg transition-transform duration-300 hover:scale-105"
-            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="w-full h-full object-cover rounded-lg"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
           />
-          <div className="flex space-x-4 mt-4">
-            {images.slice(1).map((image, index) => (
-              <motion.img
-                key={index}
-                src={image.url || "https://via.placeholder.com/400"}
-                alt={`Thumbnail ${index + 1}`}
-                className="w-20 h-20 rounded-lg cursor-pointer hover:opacity-80"
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-              />
-            ))}
-          </div>
-        </>
-      ) : (
-        <p className="text-gray-500">No images available</p>
-      )}
+
+          <button
+            onClick={handlePrev}
+            className="absolute top-1/2 left-2 -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75"
+          >
+            &#8592;
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75"
+          >
+            &#8594;
+          </button>
+        </div>
+
+        <div className="flex justify-center items-center space-x-2 mt-4 h-[30%] overflow-hidden">
+          {images.map((image, index) => (
+            <motion.img
+              key={index}
+              src={image.url || "https://via.placeholder.com/100"}
+              alt={`Thumbnail ${index + 1}`}
+              className={`w-14 h-14 object-cover rounded-lg cursor-pointer transition-all duration-300 ${
+                currentIndex === index
+                  ? "border-2 border-red-600 scale-105"
+                  : "border border-gray-300"
+              }`}
+              onClick={() => setCurrentIndex(index)}
+              whileHover={{ scale: 1.1 }}
+            />
+          ))}
+        </div>
+      </div>
     </aside>
   );
 };
