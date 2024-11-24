@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { ProductDTO } from "@/shared/products/dto/ProductDTO";
@@ -13,8 +13,7 @@ const ProductPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [stickyClass, setStickyClass] = useState<string>("top-0");
-
-  const productService = new ProductService();
+  const productService = useMemo(() => new ProductService(), []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,8 +37,7 @@ const ProductPage: React.FC = () => {
     if (!slug) return;
 
     setLoading(true);
-    productService
-      .getProductBySku(slug as string)
+    productService.getProductBySku(slug as string)
       .then((data) => {
         setProduct(data);
         setLoading(false);
@@ -48,7 +46,7 @@ const ProductPage: React.FC = () => {
         setError(err.message || "Failed to fetch product");
         setLoading(false);
       });
-  }, [slug]);
+  }, [slug, productService]);
 
   if (loading) {
     return (
