@@ -1,38 +1,37 @@
-"use client";
-
-import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
-import ProductService from "@/shared/products/service/ProductService";
-
-import { ProductDTO } from "@/shared/products/dto/ProductDTO";
-import LoadingScreen from "@/core/products/pages/LoadingScreen";
-import ErrorScreen from "@/core/products/pages/ErrorScreen";
+'use client'
+import React, { useEffect, useState } from "react";
 import ProductSidebar from "@/core/products/components/ProductSidebar";
 import ProductDetails from "@/core/products/components/ProductDetails";
+import ProductService from "@/shared/products/service/ProductService";
+import LoadingScreen from "@/core/products/pages/LoadingScreen";
+import ErrorScreen from "@/core/products/pages/ErrorScreen";
 
-const ProductPage: React.FC = () => {
-  const { slug } = useParams();
-  const [product, setProduct] = useState<ProductDTO | null>(null);
+interface ProductContainerPageProps {
+  sku: string;
+}
+
+const ProductContainerPage: React.FC<ProductContainerPageProps> = ({ sku }) => {
+  const [product, setProduct] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const productService = useMemo(() => new ProductService(), []);
 
   useEffect(() => {
-    if (!slug) return;
+    const fetchProduct = async () => {
+      setLoading(true);
+      const productService = new ProductService();
 
-    setLoading(true);
-    productService
-      .getProductBySku(slug as string)
-      .then((data) => {
+      try {
+        const data = await productService.getProductBySku(sku);
         setProduct(data);
         setLoading(false);
-        console.log(data);
-      })
-      .catch((err) => {
+      } catch (err: any) {
         setError(err.message || "Failed to fetch product");
         setLoading(false);
-      });
-  }, [slug, productService]);
+      }
+    };
+
+    fetchProduct();
+  }, [sku]);
 
   if (loading) return <LoadingScreen message="Loading product details..." />;
   if (error) return <ErrorScreen message={error} />;
@@ -48,4 +47,4 @@ const ProductPage: React.FC = () => {
   );
 };
 
-export default ProductPage;
+export default ProductContainerPage;
