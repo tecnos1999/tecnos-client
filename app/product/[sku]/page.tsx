@@ -1,7 +1,7 @@
 import ProductContainerPage from "@/components/ProductContainerPage";
 
-export default function ProductPage({ params }: { params: { sku: string } }) {
-  const { sku } = params; 
+export default async function ProductPage({ params }: { params: Promise<{ sku: string }> }) {
+  const { sku } = await params; 
 
   return <ProductContainerPage sku={sku} />;
 }
