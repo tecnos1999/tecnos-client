@@ -5,13 +5,14 @@ import ProductDetails from "@/core/products/components/ProductDetails";
 import ProductService from "@/shared/products/service/ProductService";
 import LoadingScreen from "@/core/products/pages/LoadingScreen";
 import ErrorScreen from "@/core/products/pages/ErrorScreen";
+import { ProductDTO } from "@/shared/products/dto/ProductDTO";
 
 interface ProductContainerPageProps {
   sku: string;
 }
 
 const ProductContainerPage: React.FC<ProductContainerPageProps> = ({ sku }) => {
-  const [product, setProduct] = useState<any | null>(null);
+  const [product, setProduct] = useState<ProductDTO | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,8 +25,8 @@ const ProductContainerPage: React.FC<ProductContainerPageProps> = ({ sku }) => {
         const data = await productService.getProductBySku(sku);
         setProduct(data);
         setLoading(false);
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch product");
+      } catch (err ) {
+        setError(err as string || "Failed to fetch product");
         setLoading(false);
       }
     };
