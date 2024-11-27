@@ -47,10 +47,10 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({ images, name }) => {
 
   return (
     <aside
-      className={`hidden lg:flex flex-col sticky ${stickyClass} h-[30%] w-full p-4 bg-white shadow-lg rounded-lg`}
+      className={`hidden lg:flex flex-col sticky ${stickyClass} h-[30%] w-full p-4 min-h-[500px] bg-white rounded-lg`}
     >
       <div className="flex flex-col h-full">
-        <div className="relative h-[70%] w-full rounded-lg overflow-hidden shadow-md">
+        <div className="relative h-[70%]  w-full rounded-lg overflow-hidden shadow-md">
           <motion.img
             key={currentIndex}
             src={images[currentIndex]?.url || "https://via.placeholder.com/600"}
