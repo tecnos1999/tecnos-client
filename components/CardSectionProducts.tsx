@@ -5,7 +5,6 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import ProductService from "@/shared/products/service/ProductService";
 import { ProductDTO } from "@/shared/products/dto/ProductDTO";
-import Link from "next/link";
 import { determinePath } from "@/utils/utils";
 import { useRouter } from "next/navigation";
 
