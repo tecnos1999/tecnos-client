@@ -8,6 +8,8 @@ import LoadingScreen from "@/core/products/pages/LoadingScreen";
 import ErrorScreen from "@/core/products/pages/ErrorScreen";
 import ProductSidebar from "@/core/products/components/ProductSidebar";
 import ProductDetails from "@/core/products/components/ProductDetails";
+
+
 const ProductPage: React.FC = () => {
   const { sku } = useParams();
   const [product, setProduct] = useState<ProductDTO | null>(null);
