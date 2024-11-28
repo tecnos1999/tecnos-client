@@ -6,7 +6,7 @@ import Image from "next/image";
 import ProductService from "@/shared/products/service/ProductService";
 import { ProductDTO } from "@/shared/products/dto/ProductDTO";
 import { determinePath } from "@/utils/utils";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Props {
   category: string;
@@ -22,6 +22,7 @@ const CardSectionProducts: React.FC<Props> = ({
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -57,6 +58,14 @@ const CardSectionProducts: React.FC<Props> = ({
     fetchProducts();
   }, [category, subCategory, itemCategory]);
 
+  const redirectToProductDetails = (sku: string) => {
+    const queryParams = new URLSearchParams({
+      sku: encodeURIComponent(sku),
+    });
+    router.push(determinePath(`product?${queryParams.toString()}`));
+  };
+  
+
   if (loading) {
     return <div className="text-center py-12">Loading products...</div>;
   }
@@ -72,6 +81,7 @@ const CardSectionProducts: React.FC<Props> = ({
       </div>
     );
   }
+
 
 
   return (
@@ -100,13 +110,12 @@ const CardSectionProducts: React.FC<Props> = ({
                 {product.name}
               </h3>
               <div className="flex justify-between items-center">
-                <Link
-                  href={determinePath(`product/${product.sku}`)}
+                <button
+                  onClick={() => redirectToProductDetails(product.sku)}
                   className="py-2 px-6 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md"
                 >
-                 
                   Vezi detalii
-                </Link>
+                </button>
 
               
                 <motion.div

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import ProductService from "@/shared/products/service/ProductService";
 import { ProductDTO } from "@/shared/products/dto/ProductDTO";
 import LoadingScreen from "@/core/products/pages/LoadingScreen";
@@ -10,17 +10,22 @@ import ProductSidebar from "@/core/products/components/ProductSidebar";
 import ProductDetails from "@/core/products/components/ProductDetails";
 
 const ProductDetailsContent: React.FC = () => {
-  const { sku } = useParams<{ sku: string }>(); 
+  const searchParams = useSearchParams();
+  const sku = searchParams.get("sku");
   const [product, setProduct] = useState<ProductDTO | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const productService = useMemo(() => new ProductService(), []);
-
   useEffect(() => {
-    if (!sku) return;
+    if (!sku) {
+      setError("SKU not provided");
+      setLoading(false);
+      return;
+    }
 
+    const productService = new ProductService();
     setLoading(true);
+
     productService
       .getProductBySku(sku)
       .then((data) => {
@@ -28,10 +33,10 @@ const ProductDetailsContent: React.FC = () => {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err.message || "Failed to fetch product");
+        setError(err.message || "Failed to fetch product details");
         setLoading(false);
       });
-  }, [sku, productService]);
+  }, [sku]);
 
   if (loading) return <LoadingScreen message="Loading product details..." />;
   if (error) return <ErrorScreen message={error} />;

@@ -1,7 +1,7 @@
 "use client";
 
-import ProductDetailsContent from "@/core/products/components/ProductDetailsContent";
 import React, { Suspense } from "react";
+import ProductDetailsContent from "@/core/products/components/ProductDetailsContent";
 
 const LoadingFallback: React.FC = () => {
   return <div>Loading product details...</div>;

@@ -25,14 +25,7 @@ const nextConfig = {
 
 
     reactStrictMode: true,
-    async rewrites() {
-        return [
-          {
-            source: "/ui/:path*",
-            destination: "/:path*",
-          },
-        ];
-      },
+    
 };
 
 export default nextConfig;
