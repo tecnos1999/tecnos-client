@@ -12,20 +12,21 @@ const nextConfig = {
             },
         });
 
-        
+
         return config;
     },
     images: {
         domains: ['s3-us-west-2.amazonaws.com', 'via.placeholder.com', 'localhost', '**'],
     },
-    
+
     assetPrefix: process.env.REACT_APP_ENV === 'development'
         ? 'http://localhost:8080/ui-static'
-        : 'https://89.33.44.227/ui-static',
+        : 'http://89.33.44.227:8080/ui-static',
 
 
     reactStrictMode: true,
-  
+    
+   
 };
 
 export default nextConfig;
