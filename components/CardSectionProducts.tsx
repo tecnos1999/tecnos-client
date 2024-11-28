@@ -6,7 +6,6 @@ import Image from "next/image";
 import ProductService from "@/shared/products/service/ProductService";
 import { ProductDTO } from "@/shared/products/dto/ProductDTO";
 import { determinePath } from "@/utils/utils";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface Props {
@@ -23,7 +22,6 @@ const CardSectionProducts: React.FC<Props> = ({
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
