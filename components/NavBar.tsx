@@ -60,8 +60,8 @@ const Navbar: React.FC = () => {
     const routeMap: Record<MainSection, string> = {
       [MainSection.ACASA]: "/",
       [MainSection.PRODUSE]: "/",
-      [MainSection.APLICATII_TEHNOLOGIE]: "/aplicatii&tehnologie",
-      [MainSection.PARTENERI]: "/parteneri",
+      [MainSection.APLICATII_TEHNOLOGIE]: "aplicatii&tehnologie",
+      [MainSection.PARTENERI]: "parteneri",
     };
 
     const route = routeMap[section];

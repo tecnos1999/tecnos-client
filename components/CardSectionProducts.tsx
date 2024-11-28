@@ -7,6 +7,7 @@ import ProductService from "@/shared/products/service/ProductService";
 import { ProductDTO } from "@/shared/products/dto/ProductDTO";
 import { determinePath } from "@/utils/utils";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Props {
   category: string;
@@ -74,9 +75,6 @@ const CardSectionProducts: React.FC<Props> = ({
     );
   }
 
-  const navigateToProduct = (path:string) => {
-    router.push(path);
-  };
 
   return (
     <div className="flex justify-center items-center py-12">
@@ -104,18 +102,15 @@ const CardSectionProducts: React.FC<Props> = ({
                 {product.name}
               </h3>
               <div className="flex justify-between items-center">
-                <p
+                <Link
+                  href={determinePath(`product/${product.sku}`)}
                   className="py-2 px-6 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md"
                 >
-                  {
-                    determinePath(`product/${product.sku}`)
-                  }
+                 
                   Vezi detalii
-                </p>
+                </Link>
 
-                <p onClick={ ()=>navigateToProduct(`product/${product.sku}`)}>
-                   Use Navigate 
-                </p>
+              
                 <motion.div
                   className="w-10 h-10 bg-gray-100 text-gray-800 rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:bg-red-500 hover:text-white transition-all duration-300"
                   whileHover={{ scale: 1.2, rotate: 15 }}
