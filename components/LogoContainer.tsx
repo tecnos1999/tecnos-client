@@ -1,19 +1,29 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-
-const logos = [
-  "https://via.placeholder.com/150x50.png?text=Logo+1",
-  "https://via.placeholder.com/150x50.png?text=Logo+2",
-  "https://via.placeholder.com/150x50.png?text=Logo+3",
-  "https://via.placeholder.com/150x50.png?text=Logo+4",
-  "https://via.placeholder.com/150x50.png?text=Logo+5",
-  "https://via.placeholder.com/150x50.png?text=Logo+6",
-];
+import PartnersService from '@/shared/partners/service/PartnersService';
+import PartnerDTO from '@/shared/partners/dto/PartnersDTO';
 
 const LogoContainer: React.FC = () => {
+  const [logos, setLogos] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchPartners = async () => {
+      const service = new PartnersService();
+      try {
+        const data = await service.getAllPartners();
+        const logoUrls = data.map((partner: PartnerDTO) => partner.image?.url).filter(Boolean);
+        setLogos(logoUrls);
+      } catch (error) {
+        console.error('Failed to fetch logos:', error);
+      }
+    };
+
+    fetchPartners();
+  }, []);
+
   return (
     <div className="py-16 px-4 sm:px-6 md:px-8 relative overflow-hidden mx-auto max-w-screen-xl">
       <div className="text-center mb-10">
@@ -25,24 +35,27 @@ const LogoContainer: React.FC = () => {
         </h2>
       </div>
 
-      <motion.div
-        className="flex gap-6"
-        animate={{ x: ['0%', '-100%'] }} 
-        transition={{ repeat: Infinity, duration: 50, ease: 'linear' }} 
-      >
-        {logos.map((logo, index) => (
-          <div key={index} className="flex-shrink-0">
-            <Image src={logo} alt={`Logo ${index + 1}`}  width={250} height={150} />
-          </div>
-        ))}
- 
-        {logos.map((logo, index) => (
-          <div key={index + logos.length} className="flex-shrink-0">
-            <Image src={logo} alt={`Logo ${index + 1}`} width={250} height={150} />
-          </div>
-        ))}
+      {logos.length > 0 ? (
+        <motion.div
+          className="flex gap-6"
+          animate={{ x: ['0%', '-100%'] }} 
+          transition={{ repeat: Infinity, duration: 50, ease: 'linear' }}
+        >
+          {logos.map((logo, index) => (
+            <div key={index} className="flex-shrink-0">
+              <Image src={logo} alt={`Logo ${index + 1}`} width={150} height={50} />
+            </div>
+          ))}
 
-      </motion.div>
+          {logos.map((logo, index) => (
+            <div key={index + logos.length} className="flex-shrink-0">
+              <Image src={logo} alt={`Logo ${index + 1}`} width={150} height={50} />
+            </div>
+          ))}
+        </motion.div>
+      ) : (
+        <p className="text-center text-gray-500">Se încarcă partenerii...</p>
+      )}
     </div>
   );
 };

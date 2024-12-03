@@ -61,7 +61,7 @@ const Navbar: React.FC = () => {
       [MainSection.ACASA]: "/",
       [MainSection.PRODUSE]: "/",
       [MainSection.APLICATII_TEHNOLOGIE]: "aplicatii&tehnologie",
-      [MainSection.PARTENERI]: "parteneri",
+      [MainSection.PARTENERI]: "partners",
     };
 
     const route = routeMap[section];
