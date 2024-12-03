@@ -29,6 +29,7 @@ const PartnersPage: React.FC = () => {
 
   const handleViewProducts = (partnerName: string) => {
     router.push(determinePath(`products/partners`));
+    console.log(partnerName);
   };
 
   return (
