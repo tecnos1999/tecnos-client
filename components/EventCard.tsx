@@ -1,13 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-'use client'
+"use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { StaticImageData } from "next/image";
 import Image from "next/image";
 
 interface EventCardProps {
-  image: StaticImageData;
+  image: string;
   date: string;
+  updated_at: string;
   title: string;
   subtitle: string;
   description: string;
@@ -16,12 +16,14 @@ interface EventCardProps {
 const EventCard: React.FC<EventCardProps> = ({
   image,
   date,
+  updated_at,
   title,
   subtitle,
   description,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const formattedDate = new Date(date);
+  const updateFormattedDate = new Date(updated_at);
 
   const isValidDate = !isNaN(formattedDate.getTime());
 
@@ -43,45 +45,38 @@ const EventCard: React.FC<EventCardProps> = ({
           <a href="#">
             <Image
               src={image}
-              alt="Ice Cream Sundae Party"
+              alt={title}
               className="w-full h-full object-cover"
               width={500}
               height={300}
+              unoptimized
             />
           </a>
         </motion.header>
-        <motion.div
-          className="absolute flex items-center justify-center flex-col top-5 right-5 w-[35px] h-[35px] bg-coral rounded-full text-white bg-red-700 text-center font-bold leading-[13px]"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          {isValidDate ? (
-            <>
-              <span className="text-sm">{formattedDate.getDate()}</span>
-              <span className="uppercase text-xs">
-                {formattedDate.toLocaleString("default", { month: "short" })}
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="text-sm">11</span>
-              <span className="uppercase text-xs">Sep</span>
-            </>
-          )}
-        </motion.div>
+
         <motion.div
           className="relative p-4 h-[150px] md:h-[165px]"
           animate={{ height: isHovered ? "250px" : "150px" }}
           transition={{ duration: 0.5 }}
         >
           <motion.div
-            className="absolute top-[-20px] left-0 h-[20px] px-[10px] bg-coral text-white bg-red-700 uppercase text-xs leading-[20px]"
+            className="absolute top-[-20px] left-0 h-[20px] px-[10px] bg-coral text-white bg-red-700 uppercase text-xs leading-[20px] gap-2"
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <a href="#">pet</a>
+            {isValidDate ? (
+              <>
+                <span className="text-xs">
+                  {formattedDate.getDate()}{" "}
+                  {formattedDate.toLocaleString("default", { month: "short" })}
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="text-xs uppercase">11 Sep</span>
+              </>
+            )}
           </motion.div>
           <h2 className="m-0 mb-1 text-black text-xl font-bold uppercase">
             <a href="#">{title}</a>
@@ -104,7 +99,8 @@ const EventCard: React.FC<EventCardProps> = ({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <span className="icon ion-clock">Create by Flore Denis</span>
+          <span className="icon ion-clock">Updated on {updateFormattedDate.getDate()}{" "}
+          {updateFormattedDate.toLocaleString("default", { month: "short" })}</span>
         </motion.footer>
       </motion.article>
     </div>

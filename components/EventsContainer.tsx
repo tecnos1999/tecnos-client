@@ -1,93 +1,20 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import EventCard from "./EventCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import webinar1 from "@/assets/webinar1.jpg";
-
-const events = [
-  {
-    image: webinar1,
-    date: "15.12.2025",
-    title: "JavaScript Conference",
-    subtitle: "Modern JS Frameworks",
-    description: "Discover the latest advancements in JavaScript frameworks and libraries.",
-  },
-
-  {
-    image: webinar1,
-    date: "18.12.2025",
-    title: "AI & Machine Learning Summit",
-    subtitle: "Future of AI",
-    description: "Explore cutting-edge AI technologies and their applications in various industries.",
-  },
-
-  {
-    image: webinar1,
-    date: "20.12.2025",
-    title: "Cloud Computing Workshop",
-    subtitle: "Scaling with Cloud",
-    description: "Learn how to efficiently scale applications using cloud infrastructure.",
-  },
-
-  {
-    image: webinar1,
-    date: "22.12.2025",
-    title: "Cybersecurity Conference",
-    subtitle: "Securing Digital Assets",
-    description: "Understand modern cybersecurity threats and solutions to protect your data.",
-  },
-
-  {
-    image: webinar1,
-    date: "25.12.2025",
-    title: "Blockchain Hackathon",
-    subtitle: "Innovating with Blockchain",
-    description: "Join developers to build innovative solutions using blockchain technology.",
-  },
-
-  {
-    image: webinar1,
-    date: "28.12.2025",
-    title: "DevOps Meetup",
-    subtitle: "Automation and CI/CD",
-    description: "Explore best practices for automating workflows and continuous integration.",
-  },
-
-  {
-    image: webinar1,
-    date: "30.12.2025",
-    title: "Frontend Developer Conference",
-    subtitle: "Building Interactive UIs",
-    description: "Learn the latest tools and techniques for creating interactive user interfaces.",
-  },
-
-  {
-    image: webinar1,
-    date: "02.01.2026",
-    title: "Data Science Workshop",
-    subtitle: "Data Analysis & Visualization",
-    description: "Gain insights into data analysis techniques and powerful visualization tools.",
-  },
-
-  {
-    image: webinar1,
-    date: "05.01.2026",
-    title: "AR/VR Conference",
-    subtitle: "Building Immersive Experiences",
-    description: "Discover how AR and VR technologies are reshaping user experiences.",
-  },
-];
-
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import EventDTO from "@/shared/event/dto/EventDTO";
+import EventService from "@/shared/event/service/EventService";
+import { toast } from "react-toastify";
 
 const ITEMS_PER_PAGE = 4;
 
 const EventsContainer: React.FC = () => {
+  const [events, setEvents] = useState<EventDTO[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const totalPages = Math.ceil(events.length / ITEMS_PER_PAGE);
 
@@ -95,6 +22,23 @@ const EventsContainer: React.FC = () => {
     currentPage * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE
   );
+
+  const eventService = new EventService();
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const fetchedEvents = await eventService.getAllEvents();
+        setEvents(fetchedEvents);
+      } catch (error) {
+        toast.error(error as string || "Failed to fetch events");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, [eventService]);
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -106,23 +50,25 @@ const EventsContainer: React.FC = () => {
     exit: { opacity: 0, y: -20 },
   };
 
+  if (loading) {
+    return <div className="text-center py-16 text-gray-500">Loading events...</div>;
+  }
+
   return (
     <div className="py-16 px-4 sm:px-6 md:px-8 relative overflow-hidden mx-auto max-w-screen-xl">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-8 sm:mb-10 md:mb-12 text-black"></h2>
-
       <div className="text-center mb-10">
         <h3 className="text-lg sm:text-xl md:text-2xl text-red-700 mb-2">
           Descoperă evenimentele noastre
         </h3>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-black">
-           Evenimente
+          Evenimente
         </h2>
       </div>
 
       <motion.div
         onClick={() => setCurrentPage(currentPage > 0 ? currentPage - 1 : 0)}
         className={`absolute left-2 top-1/2 transform -translate-y-1/2 bg-white shadow-md text-black z-20 cursor-pointer opacity-80 hover:opacity-100 transition-opacity duration-300 rounded-full p-2 sm:p-3 ${
-          currentPage === 0 ? "hidden " : ""
+          currentPage === 0 ? "hidden" : ""
         }`}
       >
         <FontAwesomeIcon icon={faChevronLeft} className="text-sm sm:text-xl" />
@@ -135,7 +81,7 @@ const EventsContainer: React.FC = () => {
           )
         }
         className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-white shadow-md text-black z-20 cursor-pointer opacity-80 hover:opacity-100 transition-opacity duration-300 rounded-full p-2 sm:p-3 ${
-          currentPage === totalPages - 1 ? " hidden " : ""
+          currentPage === totalPages - 1 ? "hidden" : ""
         }`}
       >
         <FontAwesomeIcon icon={faChevronRight} className="text-sm sm:text-xl" />
@@ -154,11 +100,12 @@ const EventsContainer: React.FC = () => {
               className="flex-shrink-0 w-[250px]"
             >
               <EventCard
-                image={event.image}
-                date={event.date}
+                image={event.image?.url || ""}
+                date={event.createdAt ? new Date(event.createdAt).toLocaleDateString() : ""}
+                updated_at={event.updatedAt ? new Date(event.updatedAt?.toString()).toLocaleDateString() : ""}
                 title={event.title}
-                subtitle={event.subtitle}
-                description={event.description}
+                subtitle={event.description}
+                description={event.description|| ""}
               />
             </motion.div>
           ))}

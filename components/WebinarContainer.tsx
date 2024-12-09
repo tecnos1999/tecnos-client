@@ -1,124 +1,44 @@
 "use client";
-import React, { useState } from "react";
-import WebinarCard from "./WebinarCard"; 
+
+import React, { useEffect, useState } from "react";
+import WebinarCard from "./WebinarCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import webinar1 from "@/assets/webinar1.jpg";
-
-const webinars = [
-  {
-    date: "15 Decembrie 2025",
-    title: "Introducere în Webinare",
-    duration: "2 ore",
-    name: "John Doe",
-    description: "Un webinar despre tendințele în webinarii.",
-    time: "18:00",
-  },
-  {
-    date: "20 Decembrie 2025",
-    title: "Cum să creezi Webinare de succes",
-    duration: "3 ore",
-    name: "Jane Doe",
-    description: "O sesiune despre crearea webinariilor eficiente.",
-    time: "17:00",
-  },
-  {
-    date: "25 Decembrie 2025",
-    title: "Webinarii interactive",
-    duration: "1 oră",
-    name: "Mark Smith",
-    description: "Descoperă cum să creezi webinarii interactive.",
-    time: "16:00",
-  },
-  {
-    date: "25 Decembrie 2025",
-    title: "Webinarii interactive",
-    duration: "1 oră",
-    name: "Mark Smith",
-    description: "Descoperă cum să creezi webinarii interactive.",
-    time: "16:00",
-  },
-  {
-    date: "15 Decembrie 2025",
-    title: "Introducere în Webinare",
-    duration: "2 ore",
-    name: "John Doe",
-    description: "Un webinar despre tendințele în webinarii.",
-    time: "18:00",
-  },
-  {
-    date: "20 Decembrie 2025",
-    title: "Cum să creezi Webinare de succes",
-    duration: "3 ore",
-    name: "Jane Doe",
-    description: "O sesiune despre crearea webinariilor eficiente.",
-    time: "17:00",
-  },
-  {
-    date: "25 Decembrie 2025",
-    title: "Webinarii interactive",
-    duration: "1 oră",
-    name: "Mark Smith",
-    description: "Descoperă cum să creezi webinarii interactive.",
-    time: "16:00",
-  },
-  {
-    date: "25 Decembrie 2025",
-    title: "Webinarii interactive",
-    duration: "1 oră",
-    name: "Mark Smith",
-    description: "Descoperă cum să creezi webinarii interactive.",
-    time: "16:00",
-  },
-  {
-    date: "15 Decembrie 2025",
-    title: "Introducere în Webinare",
-    duration: "2 ore",
-    name: "John Doe",
-    description: "Un webinar despre tendințele în webinarii.",
-    time: "18:00",
-  },
-  {
-    date: "20 Decembrie 2025",
-    title: "Cum să creezi Webinare de succes",
-    duration: "3 ore",
-    name: "Jane Doe",
-    description: "O sesiune despre crearea webinariilor eficiente.",
-    time: "17:00",
-  },
-  {
-    date: "25 Decembrie 2025",
-    title: "Webinarii interactive",
-    duration: "1 oră",
-    name: "Mark Smith",
-    description: "Descoperă cum să creezi webinarii interactive.",
-    time: "16:00",
-  },
-  {
-    date: "25 Decembrie 2025",
-    title: "Webinarii interactive",
-    duration: "1 oră",
-    name: "Mark Smith",
-    description: "Descoperă cum să creezi webinarii interactive.",
-    time: "16:00",
-  },
-];
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import WebinarService from "@/shared/webinar/service/WebinarService";
+import WebinarDTO from "@/shared/webinar/dto/WebinarDTO";
+import { toast } from "react-toastify";
 
 const ITEMS_PER_PAGE = 4;
 
 const WebinarContainer: React.FC = () => {
+  const [webinars, setWebinars] = useState<WebinarDTO[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const totalPages = Math.ceil(webinars.length / ITEMS_PER_PAGE);
 
-  const currentEvents = webinars.slice(
+  const currentWebinars = webinars.slice(
     currentPage * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE
   );
+
+  const webinarService = new WebinarService();
+
+  useEffect(() => {
+    const fetchWebinars = async () => {
+      try {
+        const fetchedWebinars = await webinarService.getAllWebinars();
+        setWebinars(fetchedWebinars);
+      } catch (error) {
+        toast.error("Failed to fetch webinars");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWebinars();
+  }, [webinarService]);
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -129,6 +49,10 @@ const WebinarContainer: React.FC = () => {
     }),
     exit: { opacity: 0, y: -20 },
   };
+
+  if (loading) {
+    return <div className="text-center py-16 text-gray-500">Loading webinars...</div>;
+  }
 
   return (
     <div className="py-16 px-4 sm:px-6 md:px-8 relative overflow-hidden mx-auto max-w-screen-xl">
@@ -163,9 +87,9 @@ const WebinarContainer: React.FC = () => {
         <FontAwesomeIcon icon={faChevronRight} className="text-sm sm:text-xl" />
       </motion.div>
 
-      <AnimatePresence >
+      <AnimatePresence>
         <div className="overflow-x-scroll md:overflow-hidden flex md:items-center md:justify-center gap-6">
-          {currentEvents.map((event, index) => (
+          {currentWebinars.map((webinar, index) => (
             <motion.div
               key={`${currentPage}-${index}`}
               custom={index}
@@ -176,12 +100,12 @@ const WebinarContainer: React.FC = () => {
               className="flex-shrink-0 w-[250px]"
             >
               <WebinarCard
-                date={event.date}
-                title={event.title}
-                duration={event.duration}
-                name={event.name}
-                time={event.time}
-                imageUrl={webinar1}
+                date={webinar.createdAt || ""}
+                title={webinar.title}
+                duration="Durata necunoscută"
+                link={webinar.externalLink || "N/A"} 
+                time={webinar.updatedAt || ""}
+                imageUrl={webinar.image?.url || ""}
               />
             </motion.div>
           ))}

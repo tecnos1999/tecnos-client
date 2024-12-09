@@ -1,78 +1,44 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import QuoteCard from './QuoteCard';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-
-const testimonials = [
-  {
-    quote: "Sometimes I think the surest sign that intelligent life exists elsewhere...",
-    author: "Pelican Steve",
-    job: "LittleThemes",
-    imageUrl: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample3.jpg",
-  },
-  {
-    quote: "I don't need to compromise on my principles...",
-    author: "Max Conversion",
-    job: "LittleThemes",
-    imageUrl: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample47.jpg",
-  },
-  {
-    quote: "That's the problem with nature...",
-    author: "Eleanor Faint",
-    job: "LittleThemes",
-    imageUrl: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample17.jpg",
-  },
-  {
-    quote: "Sometimes I think the surest sign that intelligent life exists elsewhere...",
-    author: "Pelican Steve",
-    job: "LittleThemes",
-    imageUrl: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample3.jpg",
-  },
-  {
-    quote: "I don't need to compromise on my principles...",
-    author: "Max Conversion",
-    job: "LittleThemes",
-    imageUrl: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample47.jpg",
-  },
-  {
-    quote: "That's the problem with nature...",
-    author: "Eleanor Faint",
-    job: "LittleThemes",
-    imageUrl: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample17.jpg",
-  },
-  {
-    quote: "Sometimes I think the surest sign that intelligent life exists elsewhere...",
-    author: "Pelican Steve",
-    job: "LittleThemes",
-    imageUrl: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample3.jpg",
-  },
-  {
-    quote: "I don't need to compromise on my principles...",
-    author: "Max Conversion",
-    job: "LittleThemes",
-    imageUrl: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample47.jpg",
-  },
-  {
-    quote: "That's the problem with nature...",
-    author: "Eleanor Faint",
-    job: "LittleThemes",
-    imageUrl: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample17.jpg",
-  },
-];
+import React, { useEffect, useState } from "react";
+import QuoteCard from "./QuoteCard";
+import { motion, AnimatePresence } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import TestimonialService from "@/shared/testimonial/service/TestimonialService";
+import TestimonialDTO from "@/shared/testimonial/dto/TestimonialDTO";
+import { toast } from "react-toastify";
 
 const ITEMS_PER_PAGE = 3;
 
 const TestimonialContainer: React.FC = () => {
+  const [testimonials, setTestimonials] = useState<TestimonialDTO[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const totalPages = Math.ceil(testimonials.length / ITEMS_PER_PAGE);
+
   const currentTestimonials = testimonials.slice(
     currentPage * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE
   );
+
+  const testimonialService = new TestimonialService();
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const fetchedTestimonials = await testimonialService.getAllTestimonials();
+        setTestimonials(fetchedTestimonials);
+      } catch (error) {
+        toast.error("Failed to fetch testimonials");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, [testimonialService]);
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -83,6 +49,10 @@ const TestimonialContainer: React.FC = () => {
     }),
     exit: { opacity: 0, y: -20 },
   };
+
+  if (loading) {
+    return <div className="text-center py-16 text-gray-500">Loading testimonials...</div>;
+  }
 
   return (
     <div className="py-16 px-4 sm:px-6 md:px-8 relative overflow-hidden mx-auto max-w-screen-xl">
@@ -98,7 +68,7 @@ const TestimonialContainer: React.FC = () => {
       <motion.div
         onClick={() => setCurrentPage(currentPage > 0 ? currentPage - 1 : 0)}
         className={`absolute left-2 top-1/2 transform -translate-y-1/2 bg-white shadow-md text-black z-20 cursor-pointer opacity-80 hover:opacity-100 transition-opacity duration-300 rounded-full p-2 sm:p-3 ${
-          currentPage === 0 ? 'hidden ' : ''
+          currentPage === 0 ? "hidden" : ""
         }`}
       >
         <FontAwesomeIcon icon={faChevronLeft} className="text-sm sm:text-xl" />
@@ -111,7 +81,7 @@ const TestimonialContainer: React.FC = () => {
           )
         }
         className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-white shadow-md text-black z-20 cursor-pointer opacity-80 hover:opacity-100 transition-opacity duration-300 rounded-full p-2 sm:p-3 ${
-          currentPage === totalPages - 1 ? 'hidden ' : ''
+          currentPage === totalPages - 1 ? "hidden" : ""
         }`}
       >
         <FontAwesomeIcon icon={faChevronRight} className="text-sm sm:text-xl" />
@@ -130,10 +100,10 @@ const TestimonialContainer: React.FC = () => {
               className="flex-shrink-0 w-[350px]"
             >
               <QuoteCard
-                quote={testimonial.quote}
-                author={testimonial.author}
-                job={testimonial.job}
-                imageSrc={testimonial.imageUrl}
+                quote={testimonial.testimonial}
+                author={testimonial.name}
+                job={testimonial.position}
+                company={testimonial.company}
               />
             </motion.div>
           ))}
@@ -146,7 +116,7 @@ const TestimonialContainer: React.FC = () => {
             <div
               key={index}
               className={`w-2 h-2 rounded-full cursor-pointer ${
-                currentPage === index ? 'bg-red-700' : 'bg-gray-300'
+                currentPage === index ? "bg-red-700" : "bg-gray-300"
               }`}
               onClick={() => setCurrentPage(index)}
             ></div>
