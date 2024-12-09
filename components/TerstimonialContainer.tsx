@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import QuoteCard from "./QuoteCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,7 +23,7 @@ const TestimonialContainer: React.FC = () => {
     currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE
   );
 
-  const testimonialService = new TestimonialService();
+  const testimonialService = useMemo(() => new TestimonialService(), []);
 
   useEffect(() => {
     const fetchTestimonials = async () => {

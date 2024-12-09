@@ -6,7 +6,6 @@ import Image from "next/image";
 interface WebinarCardProps {
   date: string;
   title: string;
-  time: string;
   link: string;
   imageUrl: string;
 }
@@ -14,7 +13,6 @@ interface WebinarCardProps {
 const WebinarCard: React.FC<WebinarCardProps> = ({
   date,
   title,
-  time,
   link,
   imageUrl,
 }) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import EventCard from "./EventCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,7 +23,7 @@ const EventsContainer: React.FC = () => {
     currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE
   );
 
-  const eventService = new EventService();
+  const eventService = useMemo(() => new EventService(), []);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -31,14 +31,14 @@ const EventsContainer: React.FC = () => {
         const fetchedEvents = await eventService.getAllEvents();
         setEvents(fetchedEvents);
       } catch (error) {
-        toast.error(error as string || "Failed to fetch events");
+        toast.error((error as string) || "Failed to fetch events");
       } finally {
         setLoading(false);
       }
     };
 
     fetchEvents();
-  }, [eventService]);
+  }, [eventService]); 
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },

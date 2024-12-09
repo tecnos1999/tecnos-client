@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import WebinarCard from "./WebinarCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,7 +23,7 @@ const WebinarContainer: React.FC = () => {
     currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE
   );
 
-  const webinarService = new WebinarService();
+  const webinarService = useMemo(()=> new WebinarService(),[]);
 
   useEffect(() => {
     const fetchWebinars = async () => {
@@ -102,9 +102,7 @@ const WebinarContainer: React.FC = () => {
               <WebinarCard
                 date={webinar.createdAt || ""}
                 title={webinar.title}
-                duration="Durata necunoscută"
                 link={webinar.externalLink || "N/A"} 
-                time={webinar.updatedAt || ""}
                 imageUrl={webinar.image?.url || ""}
               />
             </motion.div>
