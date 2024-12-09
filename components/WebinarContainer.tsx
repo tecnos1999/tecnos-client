@@ -31,7 +31,7 @@ const WebinarContainer: React.FC = () => {
         const fetchedWebinars = await webinarService.getAllWebinars();
         setWebinars(fetchedWebinars);
       } catch (error) {
-        toast.error("Failed to fetch webinars");
+        toast.error((error as string) || "Failed to fetch webinars");
       } finally {
         setLoading(false);
       }

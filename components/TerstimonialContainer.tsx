@@ -31,7 +31,7 @@ const TestimonialContainer: React.FC = () => {
         const fetchedTestimonials = await testimonialService.getAllTestimonials();
         setTestimonials(fetchedTestimonials);
       } catch (error) {
-        toast.error("Failed to fetch testimonials");
+        toast.error((error as string) || "Failed to fetch testimonials");
       } finally {
         setLoading(false);
       }
