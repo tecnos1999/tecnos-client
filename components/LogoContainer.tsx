@@ -1,21 +1,31 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
 import Image from 'next/image';
 import PartnersService from '@/shared/partners/service/PartnersService';
 import PartnerDTO from '@/shared/partners/dto/PartnersDTO';
+import 'swiper/css';
+import 'swiper/css/autoplay';
+import { useRouter } from 'next/navigation';
+import { determinePath } from '@/utils/utils';
 
 const LogoContainer: React.FC = () => {
-  const [logos, setLogos] = useState<string[]>([]);
+  const [logos, setLogos] = useState<{ url: string; name: string }[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPartners = async () => {
       const service = new PartnersService();
       try {
         const data = await service.getAllPartners();
-        const logoUrls = data.map((partner: PartnerDTO) => partner.image?.url).filter(Boolean);
-        setLogos(logoUrls);
+        const formattedData = data
+          .map((partner: PartnerDTO) => ({
+            url: partner.image?.url,
+            name: partner.name,
+          }))
+          .filter((partner) => partner.url && partner.name);
+        setLogos(formattedData);
       } catch (error) {
         console.error('Failed to fetch logos:', error);
       }
@@ -24,8 +34,12 @@ const LogoContainer: React.FC = () => {
     fetchPartners();
   }, []);
 
+  const handleLogoClick = (partnerName: string) => {
+    router.push(determinePath(`/products/partners?partner=${partnerName}`));
+  };
+
   return (
-    <div className="py-16 px-4 sm:px-6 md:px-8 relative overflow-hidden mx-auto max-w-screen-xl">
+    <div className="py-16 px-4 sm:px-6 md:px-8 relative mx-auto max-w-screen-xl">
       <div className="text-center mb-10">
         <h3 className="text-lg sm:text-xl md:text-2xl text-red-600 mb-2">
           Partenerii noștri
@@ -36,23 +50,41 @@ const LogoContainer: React.FC = () => {
       </div>
 
       {logos.length > 0 ? (
-        <motion.div
-          className="flex gap-6"
-          animate={{ x: ['0%', '-100%'] }} 
-          transition={{ repeat: Infinity, duration: 50, ease: 'linear' }}
+        <Swiper
+          modules={[Autoplay]}
+          spaceBetween={0}
+          slidesPerView={5}
+          loop={true}
+          autoplay={{
+            delay: 0,
+            disableOnInteraction: false,
+          }}
+          speed={5000}
+          grabCursor={true} 
+          breakpoints={{
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 5 },
+          }}
         >
-          {logos.map((logo, index) => (
-            <div key={index} className="flex-shrink-0">
-              <Image src={logo} alt={`Logo ${index + 1}`} width={150} height={50} />
-            </div>
+          {logos.concat(logos).map((logo, index) => (
+            <SwiperSlide key={index}>
+              <div
+                className="flex justify-center items-center cursor-pointer"
+                onClick={() => handleLogoClick(logo.name)}
+              >
+                <div className="bg-white shadow-md rounded-lg p-4 hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={logo.url}
+                    alt={`Logo ${logo.name}`}
+                    width={120}
+                    height={60}
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </SwiperSlide>
           ))}
-
-          {logos.map((logo, index) => (
-            <div key={index + logos.length} className="flex-shrink-0">
-              <Image src={logo} alt={`Logo ${index + 1}`} width={150} height={50} />
-            </div>
-          ))}
-        </motion.div>
+        </Swiper>
       ) : (
         <p className="text-center text-gray-500">Se încarcă partenerii...</p>
       )}

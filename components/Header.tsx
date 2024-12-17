@@ -5,6 +5,7 @@ import BurgerMenu from "./BurgerMenu";
 import NavBar from "./NavBar";
 import InfoBox from "./InfoBox";
 import SearchContainer from "./SearchContainer";
+import LogoBox from "./LogoBox";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -35,7 +36,7 @@ const Header = () => {
         }`}
       >
         <div className="col-span-1">
-          {/* <LogoBox /> */}
+          <LogoBox />
         </div>
         <div className="hidden md:flex md:flex-col col-span-2  justify-center">
           <NavBar />

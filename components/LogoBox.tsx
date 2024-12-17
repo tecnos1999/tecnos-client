@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import logo from "@/assets/logo.png";
 
@@ -17,8 +16,8 @@ const LogoBox = () => {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="w-auto h-auto" 
     >
-      <Image
-        src={logo}
+      <img
+        src={logo.src}
         alt="logo"
         width={350} 
         height={200} 
