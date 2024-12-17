@@ -4,7 +4,7 @@ import BannersCard from './BannersCard';
 
 const Banners: React.FC = () => {
   return (
-    <section className="flex relative flex-col items-center  md:absolute md:flex-row md:-translate-y-1/2 justify-center gap-8 py-8 mx-auto">
+    <section className="flex relative flex-col items-center  md:absolute md:flex-row md:-translate-y-1/2 justify-center gap-20 py-8 mx-auto w-full">
       <BannersCard
         icon={faCertificate}
         title="GARANTIA CALITATII"

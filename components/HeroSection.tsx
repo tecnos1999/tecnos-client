@@ -25,7 +25,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="relative w-full h-[650px] overflow-hidden">
+    <div className="relative w-full h-[710px] overflow-hidden">
       <motion.video
         key={currentIndex}
         src={videoUrls[currentIndex]}

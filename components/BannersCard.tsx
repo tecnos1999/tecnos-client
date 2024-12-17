@@ -12,7 +12,7 @@ interface BannersCardProps {
 const BannersCard: React.FC<BannersCardProps> = ({ icon, title, content }) => {
   return (
     <motion.div
-      className="shadow-lg rounded-lg flex flex-col items-center justify-center w-1/4 min-w-[320px] "
+      className="shadow-lg rounded-lg flex flex-col items-center justify-center mt-11  min-w-[320px] max-w-[320px] "
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.05 }}
