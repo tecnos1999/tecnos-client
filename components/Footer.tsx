@@ -2,7 +2,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FiTwitter, FiFacebook, FiDribbble, FiGithub } from 'react-icons/fi';
-import Image from 'next/image';
 import logo from '@/assets/logo.png';
 
 const Footer = () => {
@@ -17,12 +16,11 @@ const Footer = () => {
               transition={{ duration: 0.6, ease: 'easeOut' }}
               className="mb-4"
             >
-              <Image
-                src={logo}
+              <img
+                src={logo.src}
                 alt="logo"
-                width={150}
+                width={250}
                 height={75}
-                className="w-auto h-auto"
               />
             </motion.div>
             <motion.p 
@@ -119,7 +117,7 @@ const Footer = () => {
           transition={{ delay: 1.2, duration: 0.8 }}
         >
           <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} <a href="https://www.tecnos.com" className="text-gray-300 hover:text-red-700">Flore Dennis</a>. All rights reserved.
+            © {new Date().getFullYear()} <a href="https://www.tecnos.com" className="text-gray-300 hover:text-red-700">Global Development Future</a>. All rights reserved.
           </p>
         </motion.div>
       </div>
