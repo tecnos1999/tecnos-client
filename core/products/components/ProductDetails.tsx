@@ -31,7 +31,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         <div className="flex flex-wrap gap-4">
           {[
             { label: "Fișa Tehnică", url: product.tehnic, colors: "from-blue-500 to-blue-700" },
-            { label: "Catalog", url: product.catalog, colors: "from-green-500 to-green-700" },
             { label: "Broschure", url: product.broschure, colors: "from-yellow-500 to-yellow-700" },
           ]
             .filter((action) => action.url)
