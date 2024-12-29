@@ -1,5 +1,5 @@
 import ApiServer from "@/shared/system/service/ApiServer";
-import PartnerDTO from "../dto/PartnersDTO";
+import { PartnerDTO } from "../dto/PartnersDTO";
 
 class PartnersService extends ApiServer {
   getPartnerByName = async (name: string): Promise<PartnerDTO> => {
