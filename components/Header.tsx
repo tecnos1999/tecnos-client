@@ -1,11 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import BurgerMenu from "./BurgerMenu";
-// import LogoBox from "./LogoBox";
 import NavBar from "./NavBar";
 import InfoBox from "./InfoBox";
 import SearchContainer from "./SearchContainer";
 import LogoBox from "./LogoBox";
+import BurgerMenu from "./BurgerMenu";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 const SocialSidebar = () => {
   return (
-    <div className="fixed right-4 top-1/2 transform -translate-y-1/2 space-y-4 z-50">
+    <div className="fixed right-4 top-1/2 transform -translate-y-1/2 space-y-4 z-25">
       <div className="flex flex-col items-center space-y-4">
         {[
           { href: 'https://facebook.com', icon: <FiFacebook />, bgColor: 'bg-blue-600', hoverColor: 'hover:bg-blue-700' },
