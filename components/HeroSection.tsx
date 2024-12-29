@@ -17,7 +17,6 @@ const HeroSection = () => {
       try {
         const carouselService = new CarouselService();
         const items = await carouselService.getAllCarouselItems();
-        // Stocăm doar URL-ul și tipul fișierului.
         setCarouselItems(items.map((item) => ({ fileUrl: item.fileUrl, type: item.type })));
       } catch (error) {
         console.error('Failed to fetch carousel items:', error);
