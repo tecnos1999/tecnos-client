@@ -1,7 +1,6 @@
 import { Category } from "@/shared/category/models/Category";
 import { ItemCategory } from "@/shared/itemcategory/models/ItemCategory";
 import { Subcategory } from "@/shared/subcategory/models/Subcategory";
-import { Image } from "@/shared/image/models/Image";
 
 
 export interface Product {
@@ -18,5 +17,5 @@ export interface Product {
     itemCategory: ItemCategory;
     category: Category;
     subCategory: Subcategory;
-    images: Image[];
+    images: string[];
 }
