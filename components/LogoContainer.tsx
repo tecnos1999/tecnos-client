@@ -1,14 +1,14 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import Image from 'next/image';
-import PartnersService from '@/shared/partners/service/PartnersService';
-import PartnerDTO from '@/shared/partners/dto/PartnersDTO';
-import 'swiper/css';
-import 'swiper/css/autoplay';
-import { useRouter } from 'next/navigation';
-import { determinePath } from '@/utils/utils';
+"use client";
+import React, { useEffect, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import Image from "next/image";
+import PartnersService from "@/shared/partners/service/PartnersService";
+import "swiper/css";
+import "swiper/css/autoplay";
+import { useRouter } from "next/navigation";
+import { determinePath } from "@/utils/utils";
+import { PartnerDTO } from "@/shared/partners/dto/PartnersDTO";
 
 const LogoContainer: React.FC = () => {
   const [logos, setLogos] = useState<{ url: string; name: string }[]>([]);
@@ -21,13 +21,14 @@ const LogoContainer: React.FC = () => {
         const data = await service.getAllPartners();
         const formattedData = data
           .map((partner: PartnerDTO) => ({
-            url: partner.image?.url,
-            name: partner.name,
+            url: partner.imageUrl || "/default-logo.png",
+            name: partner.name || "Unknown Partner",
           }))
           .filter((partner) => partner.url && partner.name);
+
         setLogos(formattedData);
       } catch (error) {
-        console.error('Failed to fetch logos:', error);
+        console.error("Failed to fetch logos:", error);
       }
     };
 
@@ -60,7 +61,7 @@ const LogoContainer: React.FC = () => {
             disableOnInteraction: false,
           }}
           speed={5000}
-          grabCursor={true} 
+          grabCursor={true}
           breakpoints={{
             768: { slidesPerView: 3 },
             1024: { slidesPerView: 5 },
@@ -79,6 +80,7 @@ const LogoContainer: React.FC = () => {
                     width={120}
                     height={60}
                     className="object-contain"
+                    unoptimized={true}
                   />
                 </div>
               </div>

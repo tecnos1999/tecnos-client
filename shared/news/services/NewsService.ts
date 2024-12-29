@@ -7,7 +7,7 @@ class NewsService extends ApiServer {
       `/news`,
       "GET",
       null,
-      "" 
+      ""
     );
     if (response.status === 200) {
       return await response.json();
@@ -22,7 +22,7 @@ class NewsService extends ApiServer {
       `/news/${code}`,
       "GET",
       null,
-      "" 
+      ""
     );
     if (response.status === 200) {
       return await response.json();

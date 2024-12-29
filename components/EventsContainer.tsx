@@ -100,7 +100,7 @@ const EventsContainer: React.FC = () => {
               className="flex-shrink-0 w-[250px]"
             >
               <EventCard
-                image={event.image?.url || ""}
+                image={event.imageUrl || ""}
                 date={event.createdAt ? new Date(event.createdAt).toLocaleDateString() : ""}
                 updated_at={event.updatedAt ? new Date(event.updatedAt?.toString()).toLocaleDateString() : ""}
                 title={event.title}

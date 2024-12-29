@@ -1,4 +1,3 @@
-import ImageDTO from "@/shared/image/dto/ImageDTO";
 
 export interface ProductDTO {
     sku: string;
@@ -7,7 +6,7 @@ export interface ProductDTO {
     category: string | null; 
     subCategory: string | null; 
     itemCategory: string | null; 
-    images?: ImageDTO[] | null; 
+    images?: string[] | null; 
     broschure: string | null;
     tehnic: string | null;
     linkVideo: string | null;

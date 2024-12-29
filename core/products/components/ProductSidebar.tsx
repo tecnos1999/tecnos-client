@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 interface ProductSidebarProps {
-  images: { url: string }[] | null;
+  images: string[] | null;
   name: string;
 }
 
@@ -53,7 +53,7 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({ images, name }) => {
         <div className="relative h-[70%]  w-full rounded-lg overflow-hidden shadow-md">
           <motion.img
             key={currentIndex}
-            src={images[currentIndex]?.url || "https://via.placeholder.com/600"}
+            src={images[currentIndex] || "https://via.placeholder.com/600"}
             alt={name}
             className="w-full h-full object-cover rounded-lg"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -79,7 +79,7 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({ images, name }) => {
           {images.map((image, index) => (
             <motion.img
               key={index}
-              src={image.url || "https://via.placeholder.com/100"}
+              src={image || "https://via.placeholder.com/100"}
               alt={`Thumbnail ${index + 1}`}
               className={`w-14 h-14 object-cover rounded-lg cursor-pointer transition-all duration-300 ${
                 currentIndex === index

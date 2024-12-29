@@ -88,7 +88,7 @@ const ProductsContent: React.FC = () => {
                 >
                     <div className="relative w-full h-64 overflow-hidden bg-gray-200">
                         <Image
-                            src={product.images?.[0]?.url || "/fallback-image-url.jpg"}
+                            src={product.images?.[0] || "/fallback-image-url.jpg"}
                             alt={product.name || "Product Image"}
                             fill
                             className="object-cover transition-transform duration-300 hover:scale-105"

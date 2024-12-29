@@ -103,7 +103,7 @@ const WebinarContainer: React.FC = () => {
                 date={webinar.createdAt || ""}
                 title={webinar.title}
                 link={webinar.externalLink || "N/A"} 
-                imageUrl={webinar.image?.url || ""}
+                imageUrl={webinar.imageUrl || ""}
               />
             </motion.div>
           ))}

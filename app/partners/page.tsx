@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import PartnerDTO from "@/shared/partners/dto/PartnersDTO";
 import PartnersService from "@/shared/partners/service/PartnersService";
 import { determinePath } from "@/utils/utils";
+import { PartnerDTO } from "@/shared/partners/dto/PartnersDTO";
 
 const PartnersPage: React.FC = () => {
   const [partners, setPartners] = useState<PartnerDTO[]>([]);
@@ -48,9 +48,9 @@ const PartnersPage: React.FC = () => {
             style={{ width: "280px" }}
           >
             <div className="relative w-full h-40 bg-gray-100">
-              {partner.image?.url ? (
+              {partner.imageUrl ? (
                 <Image
-                  src={partner.image.url}
+                  src={partner.imageUrl}
                   alt={partner.name}
                   fill
                   className="object-contain p-4"
