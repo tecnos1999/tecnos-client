@@ -138,7 +138,7 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
                 >
                   <img
                     src={
-                      product.images?.[0]?.url ||
+                      product.images?.[0] ||
                       "https://via.placeholder.com/150"
                     }
                     alt={product.name}
