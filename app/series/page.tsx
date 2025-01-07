@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { SeriesDTO } from "@/shared/series/dto/SeriesDTO";
@@ -7,7 +8,7 @@ import { BlogDTO } from "@/shared/blog/dto/BlogDTO";
 import SeriesService from "@/shared/series/services/SeriesService";
 import BlogService from "@/shared/blog/services/BlogService";
 
-const SeriesPage = () => {
+const SeriesPageContent = () => {
   const searchParams = useSearchParams();
   const [series, setSeries] = useState<SeriesDTO | null>(null);
   const [blogs, setBlogs] = useState<BlogDTO[]>([]);
@@ -102,15 +103,7 @@ const SeriesPage = () => {
                     backgroundPosition: "center",
                   }}
                 >
-                  
-                    <div className="relative w-full aspect-w-16 aspect-h-9">
-                      <div
-                        className="absolute inset-0 bg-center bg-cover"
-                        style={{ backgroundImage: `url(${blog.mainPhotoUrl})` }}
-                      ></div>
-                    </div>
-                 
-                  <div style={{ paddingTop: "56.25%" }}></div> 
+                  <div style={{ paddingTop: "56.25%" }}></div>
                 </motion.div>
 
                 <motion.div
@@ -144,7 +137,6 @@ const SeriesPage = () => {
                       </motion.a>
                     )}
 
-                   
                     {blog.broschureUrl && (
                       <motion.a
                         href={blog.broschureUrl}
@@ -169,6 +161,14 @@ const SeriesPage = () => {
         )}
       </section>
     </>
+  );
+};
+
+const SeriesPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SeriesPageContent />
+    </Suspense>
   );
 };
 
