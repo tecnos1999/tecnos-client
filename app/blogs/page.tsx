@@ -1,23 +1,24 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import BlogService from "@/shared/blog/services/BlogService";
 import { BlogDTO } from "@/shared/blog/dto/BlogDTO";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import Image from "next/image";
 
 const BlogPage = () => {
   const searchParams = useSearchParams();
   const [blog, setBlog] = useState<BlogDTO | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
-  const blogService = new BlogService();
+  const blogService = useMemo(() => new BlogService(), []);
+
+  const blogCode = useMemo(() => searchParams.get("code"), [searchParams]);
 
   useEffect(() => {
-    const blogCode = searchParams.get("code");
-
     if (!blogCode) {
-      setError("No blog code provided in URL.");
+      toast.error("No blog code provided in URL.");
       return;
     }
 
@@ -25,22 +26,15 @@ const BlogPage = () => {
       try {
         const fetchedBlog = await blogService.getBlogByCode(blogCode);
         setBlog(fetchedBlog);
-      } catch (err: any) {
-        console.error("Failed to fetch blog:", err);
-        setError(err.message || "Failed to fetch blog.");
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof Error ? error.message : "An unknown error occurred.";
+        toast.error(errorMessage);
       }
     };
 
     fetchBlog();
-  }, [searchParams]);
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center mt-20 text-red-600 font-semibold">
-        Error: {error}
-      </div>
-    );
-  }
+  }, [blogCode, blogService]);
 
   if (!blog) {
     return (
@@ -52,7 +46,6 @@ const BlogPage = () => {
 
   return (
     <>
-      {/* Hero Section */}
       <motion.section
         className="relative mt-[104px] md:mt-[188px] px-6 lg:px-20 py-12 min-h-[40vh] w-full flex items-center justify-center text-center bg-cover bg-center"
         style={{ backgroundImage: `url(${blog.mainPhotoUrl})` }}
@@ -76,7 +69,6 @@ const BlogPage = () => {
         </motion.div>
       </motion.section>
 
-      {/* Captions Section */}
       {blog.captions.length > 0 && (
         <section className="px-6 lg:px-20 py-16 bg-gray-50">
           <div className="space-y-12 max-w-4xl mx-auto">
@@ -87,16 +79,23 @@ const BlogPage = () => {
                   caption.position === "right" ? "md:flex-row-reverse" : ""
                 }`}
               >
-                {/* Image Container */}
                 <div className="w-full md:w-1/2 rounded-lg shadow-lg overflow-hidden">
-                  <img
-                    src={caption.photoUrl}
-                    alt={caption.text.slice(0, 30) || "Caption"}
-                    className="object-cover w-full h-[300px] md:h-[400px]"
-                  />
+                  {caption.photoUrl ? (
+                    <Image
+                      src={caption.photoUrl}
+                      alt={caption.text.slice(0, 30) || "Caption"}
+                      width={500}
+                      height={300}
+                      className="object-cover w-full h-[300px] md:h-[400px]"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-gray-400">
+                      <span>No Image</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Text Container */}
                 <div className="w-full md:w-1/2 flex flex-col justify-center">
                   <p className="text-gray-700 leading-relaxed text-center md:text-left">
                     {caption.text}
