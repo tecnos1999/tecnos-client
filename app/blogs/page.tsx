@@ -69,7 +69,7 @@ const BlogPage = () => {
         </motion.div>
       </motion.section>
 
-      {blog.captions.length > 0 && (
+      {blog.captions && blog.captions.length > 0 && (
         <section className="px-6 lg:px-20 py-16 bg-gray-50">
           <div className="space-y-12 max-w-4xl mx-auto">
             {blog.captions.map((caption) => (
