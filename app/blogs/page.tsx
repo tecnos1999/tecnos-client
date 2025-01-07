@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import BlogService from "@/shared/blog/services/BlogService";
 import { BlogDTO } from "@/shared/blog/dto/BlogDTO";
@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import Image from "next/image";
 
-const BlogPage = () => {
+const BlogPageContent = () => {
   const searchParams = useSearchParams();
   const [blog, setBlog] = useState<BlogDTO | null>(null);
 
@@ -107,6 +107,14 @@ const BlogPage = () => {
         </section>
       )}
     </>
+  );
+};
+
+const BlogPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BlogPageContent />
+    </Suspense>
   );
 };
 
