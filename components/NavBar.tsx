@@ -60,7 +60,7 @@ const Navbar: React.FC = () => {
     const routeMap: Record<MainSection, string> = {
       [MainSection.ACASA]: "/",
       [MainSection.PRODUSE]: "/",
-      [MainSection.APLICATII_TEHNOLOGIE]: "aplicatii&tehnologie",
+      [MainSection.APLICATII_TEHNOLOGIE]: "/",
       [MainSection.PARTENERI]: "partners",
     };
 
@@ -81,8 +81,16 @@ const Navbar: React.FC = () => {
       itemCategory: encodeURIComponent(itemCategory),
     });
 
+    
     router.push(determinePath(`products?${queryParams.toString()}`));
   };
+
+  const handleCategoryClick = (category: string) => {
+    if (hoveredSection === MainSection.APLICATII_TEHNOLOGIE) {
+      router.push(determinePath(`series?name=${encodeURIComponent(category)}`));
+    }
+  };
+  
 
   return (
     <nav className="bg-white mx-auto hidden md:flex cursor-pointer">
@@ -130,7 +138,11 @@ const Navbar: React.FC = () => {
                 <AnimatePresence>
                   {hoveredSection === section && hasCategories && (
                     <motion.div
-                      className="absolute left-0 top-[100%] min-h-[60vh] pt-0 shadow-lg w-full flex z-10 bg-white border border-gray-200"
+                     className={`absolute left-0  pt-0 shadow-lg ${
+                        section === MainSection.APLICATII_TEHNOLOGIE
+                          ? "w-1/3 min-h-[30vh] left-[40%] top-[50%] transform -translate-x-1/2" 
+                          : "w-full min-h-[60vh] top-[100%]" 
+                      } flex z-10 bg-white border border-gray-200`}
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
@@ -147,6 +159,7 @@ const Navbar: React.FC = () => {
                               onMouseEnter={() =>
                                 handleCategoryHover(category.name)
                               }
+                              onClick={() => handleCategoryClick(category.name)}
                             >
                               <button
                                 className="text-left w-full font-medium"

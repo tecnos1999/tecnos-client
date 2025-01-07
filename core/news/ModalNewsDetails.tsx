@@ -27,6 +27,12 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
   const productService = new ProductService();
 
   useEffect(() => {
@@ -35,20 +41,17 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
         setLoading(true);
         try {
           const tagNames = tags.map((tag) => tag.name);
-          console.log("Fetching products for tags:", tagNames);
-
           const fetchedProducts = await productService.getProductsByTagsName(
             tagNames
           );
           setProducts(fetchedProducts);
         } catch (error) {
           console.error("Error fetching products by tags:", error);
-          setProducts([]); // Setează o listă goală dacă există eroare
+          setProducts([]);
         } finally {
           setLoading(false);
         }
       };
-
       fetchProducts();
     } else {
       setProducts([]);
@@ -63,130 +66,173 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
     );
   };
 
+  const handleSelectAllProducts = () => {
+    if (selectedProducts.length === products.length) {
+      setSelectedProducts([]);
+    } else {
+      setSelectedProducts(products.map((product) => product.sku));
+    }
+  };
+
   const handleRequestOffer = () => {
-    console.log("Selected products for offer:", selectedProducts);
     alert("Cerere de ofertă trimisă!");
     setSelectedProducts([]);
+    setFormData({ fullName: "", email: "", phone: "", message: "" });
     onClose();
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   if (!isOpen) return null;
 
   const backdropVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 0.75 },
+    visible: { opacity: 0.5 },
   };
 
   const modalVariants = {
-    hidden: { opacity: 0, scale: 0.75 },
+    hidden: { opacity: 0, scale: 0.95 },
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.4, ease: "easeInOut" },
+      transition: { duration: 0.3, ease: "easeOut" },
     },
-    exit: { opacity: 0, scale: 0.9, transition: { duration: 0.3 } },
+    exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } },
   };
 
   const modalContent = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Fundal cu animație */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 sm:px-6">
       <motion.div
-        className="absolute inset-0 bg-black"
+        className="absolute inset-0 bg-black opacity-50"
         variants={backdropVariants}
         initial="hidden"
         animate="visible"
         exit="hidden"
         onClick={onClose}
       />
-      {/* Conținutul modalului */}
       <motion.div
-        className="relative bg-white w-[70%] h-[80vh] p-8 rounded-lg shadow-xl z-60 flex flex-col overflow-hidden"
+        className="relative bg-white w-full max-w-4xl rounded-lg shadow-lg z-60 overflow-hidden"
         variants={modalVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
-        {/* Header */}
-        <div className="flex justify-between items-center border-b pb-4 mb-6">
-          <h2 className="text-4xl font-bold text-gray-800">{title}</h2>
+        {/* Titlul fix */}
+        <div className="sticky top-0 bg-white p-5 border-b shadow-md z-10">
           <button
             onClick={onClose}
-            className="text-red-500 text-3xl font-bold focus:outline-none hover:text-red-600"
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none text-base"
           >
             ×
           </button>
+          <h2 className="text-lg md:text-xl font-semibold text-gray-900">
+            {title}
+          </h2>
         </div>
 
-        {/* Body */}
-        <div className="flex-1 overflow-y-auto">
-          <p className="text-lg text-gray-700 mb-4">{shortDescription}</p>
-          <p className="text-lg text-gray-600 mb-6">{longDescription}</p>
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+        {/* Conținut scrollabil */}
+        <div className="overflow-y-auto px-5 py-4 max-h-[60vh]">
+          <p className="text-md text-gray-700 mb-3">{shortDescription}</p>
+          <p className="text-sm text-gray-600 mb-5">{longDescription}</p>
+
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Produse asociate:
           </h3>
-
           {loading ? (
-            <p className="text-center text-lg text-gray-500">
-              Se încarcă produsele...
-            </p>
+            <p className="text-center text-gray-500 text-sm">Se încarcă...</p>
           ) : products.length > 0 ? (
-            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <li
-                  key={product.sku}
-                  className="p-4 border rounded-lg shadow-md hover:shadow-lg transition-shadow relative"
-                >
-                  <img
-                    src={
-                      product.images?.[0] ||
-                      "https://via.placeholder.com/150"
-                    }
-                    alt={product.name}
-                    className="w-full h-32 object-cover rounded-t-lg"
-                  />
-                  <div className="mt-4">
-                    <h4 className="text-lg font-bold text-gray-800">
-                      {product.name}
-                    </h4>
-                    <p className="text-sm text-gray-600">SKU: {product.sku}</p>
-                  </div>
-                  <button
-                    onClick={() => handleProductSelect(product.sku)}
-                    className={`absolute top-2 right-2 px-3 py-1 text-sm rounded-md shadow-md ${
-                      selectedProducts.includes(product.sku)
-                        ? "bg-green-500 text-white"
-                        : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-                    }`}
+            <div>
+              <button
+                onClick={handleSelectAllProducts}
+                className="mb-4 px-3 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600"
+              >
+                {selectedProducts.length === products.length
+                  ? "Deselectează toate"
+                  : "Selectează toate"}
+              </button>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {products.map((product) => (
+                  <li
+                    key={product.sku}
+                    className="p-3 border rounded-lg shadow-sm hover:shadow-md transition relative flex flex-col items-center"
                   >
-                    {selectedProducts.includes(product.sku)
-                      ? "Deselectează"
-                      : "Selectează"}
-                  </button>
-                </li>
-              ))}
-            </ul>
+                    <img
+                      src={product.images?.[0] || "https://via.placeholder.com/150"}
+                      alt={product.name}
+                      className="w-full h-36 object-cover rounded-md"
+                    />
+                    <div className="mt-3 text-center">
+                      <h4 className="text-sm font-medium text-gray-800">
+                        {product.name}
+                      </h4>
+                      <p className="text-xs text-gray-600">SKU: {product.sku}</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={selectedProducts.includes(product.sku)}
+                      onChange={() => handleProductSelect(product.sku)}
+                      className="absolute top-3 right-3 h-3.5 w-3.5 accent-red-500 cursor-pointer"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
           ) : (
-            <p className="text-lg text-gray-500">
-              Nu există produse asociate cu aceste tag-uri.
-            </p>
+            <p className="text-gray-500 text-md">Nu există produse asociate.</p>
           )}
+
+          <form className="mt-5 grid grid-cols-1 gap-4">
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Nume complet"
+              value={formData.fullName}
+              onChange={handleInputChange}
+              className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+            />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Număr de telefon"
+              value={formData.phone}
+              onChange={handleInputChange}
+              className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+            />
+            <textarea
+              name="message"
+              placeholder="Mesaj"
+              value={formData.message}
+              onChange={handleInputChange}
+              rows={3}
+              className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+            ></textarea>
+          </form>
         </div>
 
-        {/* Footer */}
-        <div className="flex justify-between items-center mt-6">
-          <p className="text-gray-700 text-sm">
-            {selectedProducts.length} produs(e) selectat(e)
-          </p>
+        {/* Butonul fix */}
+        <div className="sticky bottom-0 bg-white p-4 border-t shadow-md flex justify-end z-10">
           <button
+            type="button"
             onClick={handleRequestOffer}
-            disabled={selectedProducts.length === 0}
-            className={`text-white text-lg px-8 py-3 rounded-md shadow-md transition-transform transform hover:scale-105 ${
-              selectedProducts.length > 0
+            disabled={selectedProducts.length === 0 || !formData.fullName || !formData.email || !formData.phone}
+            className={`text-white px-5 py-2 rounded-md text-sm transition-all ${
+              selectedProducts.length > 0 && formData.fullName && formData.email && formData.phone
                 ? "bg-red-500 hover:bg-red-600"
                 : "bg-gray-300 cursor-not-allowed"
             }`}
           >
-            Trimite cerere ofertă
+            Trimite cerere de ofertă
           </button>
         </div>
       </motion.div>

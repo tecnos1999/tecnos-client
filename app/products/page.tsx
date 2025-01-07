@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { Suspense } from "react";
 import CardSectionProducts from "@/components/CardSectionProducts";
 import { useSearchParams } from "next/navigation";
@@ -14,6 +14,7 @@ const ProductsPageContent = () => {
       <h1 className="text-center text-3xl font-semibold mb-8 text-gray-800 tracking-wide">
         Găsește Produsele Perfecte Pentru Tine
       </h1>
+
       {category && subCategory ? (
         <CardSectionProducts
           category={category}
@@ -31,7 +32,7 @@ const ProductsPageContent = () => {
 
 const ProductsPage = () => {
   return (
-    <Suspense fallback={<div>Loading products...</div>}>
+    <Suspense fallback={<div className="text-center py-12">Loading products...</div>}>
       <ProductsPageContent />
     </Suspense>
   );
