@@ -70,10 +70,10 @@ const LogoContainer: React.FC = () => {
           {logos.concat(logos).map((logo, index) => (
             <SwiperSlide key={index}>
               <div
-                className="flex justify-center items-center cursor-pointer"
+                className="flex justify-center items-center cursor-pointer p-4"
                 onClick={() => handleLogoClick(logo.name)}
               >
-                <div className="bg-white shadow-md rounded-lg p-4 hover:scale-105 transition-transform duration-300">
+                <div className="bg-white shadow-md rounded-lg  hover:scale-105 transition-transform duration-300 p-4">
                   <Image
                     src={logo.url}
                     alt={`Logo ${logo.name}`}

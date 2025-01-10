@@ -58,7 +58,7 @@ const WebinarContainer: React.FC = () => {
     <div className="py-16 px-4 sm:px-6 md:px-8 relative overflow-hidden mx-auto max-w-screen-xl">
       <div className="text-center mb-10">
         <h3 className="text-lg sm:text-xl md:text-2xl text-red-600 mb-2">
-          Descoperă webinarile noastre
+          Descopera webinarile noastre
         </h3>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-black">
           WEBINARII GRATUITE
@@ -88,7 +88,7 @@ const WebinarContainer: React.FC = () => {
       </motion.div>
 
       <AnimatePresence>
-        <div className="overflow-x-scroll md:overflow-hidden flex md:items-center md:justify-center gap-6">
+        <div className="overflow-x-scroll md:overflow-hidden flex md:items-center md:justify-center gap-6 p-2">
           {currentWebinars.map((webinar, index) => (
             <motion.div
               key={`${currentPage}-${index}`}
@@ -100,7 +100,6 @@ const WebinarContainer: React.FC = () => {
               className="flex-shrink-0 w-[250px]"
             >
               <WebinarCard
-                date={webinar.createdAt || ""}
                 title={webinar.title}
                 link={webinar.externalLink || "N/A"} 
                 imageUrl={webinar.imageUrl || ""}

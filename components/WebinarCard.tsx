@@ -4,14 +4,12 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 interface WebinarCardProps {
-  date: string;
   title: string;
   link: string;
   imageUrl: string;
 }
 
 const WebinarCard: React.FC<WebinarCardProps> = ({
-  date,
   title,
   link,
   imageUrl,
@@ -41,10 +39,6 @@ const WebinarCard: React.FC<WebinarCardProps> = ({
 
       <div className="absolute inset-0 flex flex-col justify-end p-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-black bg-opacity-50">
         <h2 className="text-xl font-bold">{title}</h2>
-        <div className="text-sm mt-2">
-          <div>Data: {new Date(date).toLocaleDateString()}</div>
-          <div>Ora: {new Date(date).toLocaleTimeString()}</div>
-        </div>
       </div>
 
       <div className="absolute top-2 right-2 h-10 w-10 border-t-2 border-r-2 border-white"></div>

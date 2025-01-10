@@ -1,25 +1,29 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { ProductDTO } from "@/shared/products/dto/ProductDTO";
 import ProductService from "@/shared/products/service/ProductService";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { determinePath } from "@/utils/utils";
-import { useRouter } from "next/navigation";
+import PartnersService from "@/shared/partners/service/PartnersService";
+import { PartnerDTO } from "@/shared/partners/dto/PartnersDTO";
+import Link from "next/link";
 
 const ProductsContent: React.FC = () => {
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [partner, setPartner] = useState<PartnerDTO | null>(null);
+
   const searchParams = useSearchParams();
   const partnerName = decodeURIComponent(searchParams.get("partner") || "");
   const router = useRouter();
+
   const productsService = useMemo(() => new ProductService(), []);
+  const partnerService = useMemo(() => new PartnersService(), []);
 
   useEffect(() => {
     if (!partnerName) {
@@ -28,11 +32,20 @@ const ProductsContent: React.FC = () => {
       return;
     }
 
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const fetchedProducts = await productsService.getProductsByPartner(partnerName);
+
+        const partnerDetails = await partnerService.getPartnerByName(
+          partnerName
+        );
+        setPartner(partnerDetails);
+
+        const fetchedProducts = await productsService.getProductsByPartner(
+          partnerName
+        );
         setProducts(fetchedProducts);
+
         setError(null);
       } catch (err) {
         const errorMessage =
@@ -48,8 +61,8 @@ const ProductsContent: React.FC = () => {
       }
     };
 
-    fetchProducts();
-  }, [partnerName, productsService]);
+    fetchData();
+  }, [partnerName, productsService, partnerService]);
 
   const redirectToProductDetails = (sku: string) => {
     const queryParams = new URLSearchParams({
@@ -71,9 +84,7 @@ const ProductsContent: React.FC = () => {
   if (error) {
     return (
       <div className="flex items-center justify-center h-96">
-        <span className="text-xl text-red-500 font-semibold">
-          {error}
-        </span>
+        <span className="text-xl text-red-500 font-semibold">{error}</span>
       </div>
     );
   }
@@ -89,73 +100,100 @@ const ProductsContent: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen py-10 px-4 md:px-8 bg-gradient-to-r from-gray-50 to-gray-100">
-      {/* Titlu */}
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
-        Products by Partner
-      </h1>
-      <h2 className="text-xl font-semibold text-center mb-10 text-gray-700">
-        Produsele partenerului{" "}
-        <span className="text-red-600">{partnerName}</span>
-      </h2>
-
-      {/* Grid responsive pentru cardurile de produse */}
+    <div className="min-h-screen py-10 px-4 md:px-8  bg-gradient-to-br from-white to-gray-100 p-6 rounded-xl">
+      {partner && (
+        <div className="max-w-screen-xl mx-auto mb-10">
+          <div className="flex flex-col md:flex-row items-start md:items-center  transition-all duration-300 px-4 py-8">
+            <div className="w-full md:w-1/3 flex justify-center md:justify-start mb-4 md:mb-0">
+              <Image
+                src={partner.imageUrl || "/fallback-image-url.jpg"}
+                alt={`${partner.name} Logo`}
+                width={300}
+                height={300}
+                className="object-contain rounded-md   "
+                unoptimized
+              />
+            </div>
+            <div className="w-full md:w-2/3 md:ml-8">
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                {partner.name}
+              </h2>
+              <p
+                className="text-gray-600 mb-6 text-sm leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: partner.description }}
+              />
+              {partner.catalogFile && (
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-block"
+                >
+                  <Link
+                    href={partner.catalogFile}
+                    passHref
+                    className="bg-blue-gradient from-blue-500 to-blue-700 text-white py-2 px-8 text-sm font-medium rounded-full transition-all duration-200 shadow-lg inline-block text-center"
+                  >
+                    Vezi Catalog
+                  </Link>
+                </motion.div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       <div
         className="
-          grid 
-          grid-cols-1 
-          sm:grid-cols-2 
-          md:grid-cols-2 
-          lg:grid-cols-3 
-          xl:grid-cols-4 
-          gap-6 
-          justify-items-center
-        "
+      max-w-screen-xl mx-auto 
+      grid 
+      grid-cols-1 
+      sm:grid-cols-2 
+      md:grid-cols-3 
+      lg:grid-cols-4 
+      gap-8 
+      justify-items-center
+    "
       >
         {products.map((product) => (
           <motion.div
             key={product.sku}
             className="
-              relative 
-              w-full             /* Pe ecrane mici, cardul ocupă toată lățimea */
-              max-w-xs           /* Limităm lățimea maximă a cardului */
-              md:w-80            /* Pe ecrane medii și mai mari, cardul are lățime fixă de 80 */
-              bg-white 
-              rounded-xl 
-              shadow-lg 
-              overflow-hidden 
-              transition-all 
-              duration-500 
-              hover:shadow-2xl 
-              hover:-translate-y-1
-            "
-            whileHover={{ scale: 1.01 }}
+          relative 
+          w-full 
+          bg-gradient-to-br from-gray-50 to-white 
+          rounded-lg 
+          shadow-md 
+          overflow-hidden 
+          hover:shadow-xl 
+          hover:-translate-y-2 
+          transition-transform duration-300
+        "
+            whileHover={{ scale: 1.02 }}
           >
-            <div className="relative w-full h-60 bg-gray-200 flex items-center justify-center">
+            <div className="relative w-full h-48 bg-gray-100 flex items-center justify-center rounded-t-lg">
               <Image
                 src={product.images?.[0] || "/fallback-image-url.jpg"}
                 alt={product.name || "Product Image"}
                 fill
-                className="object-contain transition-transform duration-300 hover:scale-105"
+                className="object-fit transition-transform duration-300 hover:scale-110"
                 unoptimized
               />
-          
             </div>
-
-            <div className="p-4 flex flex-col h-[calc(100%-240px)]">
-              <h3 className="text-lg font-semibold text-gray-700 mb-2 line-clamp-2 leading-tight">
+            <div className="p-4">
+              <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2">
                 {product.name}
               </h3>
-              <div className="mt-auto flex justify-between items-center">
-                <button
-                  onClick={() => redirectToProductDetails(product.sku)}
-                  className="py-2 px-6 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md"
-                >
-                  Vezi detalii
-                </button>
-
-             
-              </div>
+              <p
+                className="text-gray-600 text-sm mb-4 line-clamp-1"
+                dangerouslySetInnerHTML={{ __html: product.description }}
+              ></p>
+              <motion.button
+                onClick={() => redirectToProductDetails(product.sku)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className=" bg-red-gradient from-red-500 to-red-700 text-white py-2 px-6 w-full text-sm font-medium rounded-full  transition-all duration-200 shadow-lg"
+              >
+                Vezi detalii
+              </motion.button>
             </div>
           </motion.div>
         ))}

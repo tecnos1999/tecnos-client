@@ -33,11 +33,12 @@ const CardSectionProducts: React.FC<Props> = ({
         let data: ProductDTO[];
 
         if (itemCategory) {
-          data = await productService.getProductsByCategorySubCategoryAndItemCategory(
-            category,
-            subCategory,
-            itemCategory
-          );
+          data =
+            await productService.getProductsByCategorySubCategoryAndItemCategory(
+              category,
+              subCategory,
+              itemCategory
+            );
         } else {
           data = await productService.getProductsByCategoryAndSubCategory(
             category,
@@ -58,8 +59,7 @@ const CardSectionProducts: React.FC<Props> = ({
   }, [category, subCategory, itemCategory]);
 
   const redirectToProductDetails = (sku: string) => {
-    router.push(
-     determinePath(`product?sku=${encodeURIComponent(sku)}`));
+    router.push(determinePath(`product?sku=${encodeURIComponent(sku)}`));
   };
 
   if (loading) {
@@ -73,11 +73,7 @@ const CardSectionProducts: React.FC<Props> = ({
   }
 
   if (error) {
-    return (
-      <div className="text-center py-12 text-red-600">
-        {error}
-      </div>
-    );
+    return <div className="text-center py-12 text-red-600">{error}</div>;
   }
 
   if (products.length === 0) {
@@ -91,7 +87,10 @@ const CardSectionProducts: React.FC<Props> = ({
   }
 
   return (
-    <div className="min-h-screen py-10 px-4 md:px-8 bg-gradient-to-r from-gray-50 to-gray-100">
+    <div className="min-h-screen py-10 px-4 md:px-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl my-4">
+      <h1 className="text-center text-3xl font-semibold mb-8 text-gray-800 tracking-wide">
+        Găsește Produsele Perfecte Pentru Tine
+      </h1>
       <div
         className="
           grid 
@@ -115,7 +114,7 @@ const CardSectionProducts: React.FC<Props> = ({
                 src={product.images?.[0] || "/fallback-image-url.jpg"}
                 alt={product.name || "Product Image"}
                 fill
-                className="object-contain transition-transform duration-300 hover:scale-105"
+                className="object-fit transition-transform duration-300 hover:scale-110"
                 unoptimized
               />
             </div>
@@ -124,13 +123,19 @@ const CardSectionProducts: React.FC<Props> = ({
               <h3 className="text-lg font-semibold text-gray-700 mb-2 line-clamp-2 leading-tight">
                 {product.name}
               </h3>
+              <p
+                className="text-gray-600 text-sm mb-4 line-clamp-1"
+                dangerouslySetInnerHTML={{ __html: product.description }}
+              ></p>
               <div className="mt-auto flex justify-between items-center">
-                <button
+                <motion.button
                   onClick={() => redirectToProductDetails(product.sku)}
-                  className="py-2 px-6 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition-all duration-200 shadow-md"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className=" bg-red-gradient from-red-500 to-red-700 text-white py-2 px-6 w-full text-sm font-medium rounded-full  transition-all duration-200 shadow-lg"
                 >
                   Vezi detalii
-                </button>
+                </motion.button>
               </div>
             </div>
           </motion.div>

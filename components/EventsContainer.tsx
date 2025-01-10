@@ -4,7 +4,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import EventCard from "./EventCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import EventDTO from "@/shared/event/dto/EventDTO";
 import EventService from "@/shared/event/service/EventService";
 import { toast } from "react-toastify";
@@ -38,7 +41,7 @@ const EventsContainer: React.FC = () => {
     };
 
     fetchEvents();
-  }, [eventService]); 
+  }, [eventService]);
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -51,14 +54,16 @@ const EventsContainer: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-16 text-gray-500">Loading events...</div>;
+    return (
+      <div className="text-center py-16 text-gray-500">Loading events...</div>
+    );
   }
 
   return (
     <div className="py-16 px-4 sm:px-6 md:px-8 relative overflow-hidden mx-auto max-w-screen-xl">
       <div className="text-center mb-10">
         <h3 className="text-lg sm:text-xl md:text-2xl text-red-700 mb-2">
-          Descoperă evenimentele noastre
+          Descopera evenimentele noastre
         </h3>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-black">
           Evenimente
@@ -101,11 +106,9 @@ const EventsContainer: React.FC = () => {
             >
               <EventCard
                 image={event.imageUrl || ""}
-                date={event.createdAt ? new Date(event.createdAt).toLocaleDateString() : ""}
-                updated_at={event.updatedAt ? new Date(event.updatedAt?.toString()).toLocaleDateString() : ""}
                 title={event.title}
                 subtitle={event.description}
-                description={event.description|| ""}
+                description={event.description || ""}
               />
             </motion.div>
           ))}

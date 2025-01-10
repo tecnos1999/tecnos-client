@@ -1,97 +1,158 @@
-'use client'
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+"use client";
+
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { getEmbedLink } from "@/utils/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface ProductSidebarProps {
   images: string[] | null;
   name: string;
+  videoLink?: string | null;
 }
 
-const ProductSidebar: React.FC<ProductSidebarProps> = ({ images, name }) => {
-  const [stickyClass, setStickyClass] = useState<string>("top-0");
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+const ProductSidebar: React.FC<ProductSidebarProps> = ({
+  images,
+  name,
+  videoLink,
+}) => {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const triggerPoint = window.innerHeight / 3;
-
-      if (scrollY > triggerPoint) {
-        setStickyClass("top-48");
-      } else {
-        setStickyClass("top-0");
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  if (!images || images.length === 0) {
+    return (
+      <p className="text-gray-400 text-center italic">No images available</p>
+    );
+  }
 
   const handleNext = () => {
-    if (!images) return;
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
 
   const handlePrev = () => {
-    if (!images) return;
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
 
-  if (!images || images.length === 0) {
-    return <p className="text-gray-500">No images available</p>;
-  }
-
   return (
-    <aside
-      className={`hidden lg:flex flex-col sticky ${stickyClass} h-[30%] w-full p-4 min-h-[500px] bg-white rounded-lg`}
-    >
-      <div className="flex flex-col h-full">
-        <div className="relative h-[70%]  w-full rounded-lg overflow-hidden shadow-md items-center">
-          <motion.img
-            key={currentIndex}
-            src={images[currentIndex] || "https://via.placeholder.com/600"}
-            alt={name}
-            className="w-96 h-96 object-fit "
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          />
-
-          <button
-            onClick={handlePrev}
-            className="absolute top-1/2 left-2 -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75"
-          >
-            &#8592;
-          </button>
-          <button
-            onClick={handleNext}
-            className="absolute top-1/2 right-2 -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75"
-          >
-            &#8594;
-          </button>
-        </div>
-
-        <div className="flex justify-center items-center space-x-2 mt-4 h-[30%] overflow-hidden">
-          {images.map((image, index) => (
-            <motion.img
-              key={index}
-              src={image || "https://via.placeholder.com/100"}
-              alt={`Thumbnail ${index + 1}`}
-              className={`w-14 h-14 object-cover rounded-lg cursor-pointer transition-all duration-300 ${
-                currentIndex === index
-                  ? "border-2 border-red-600 scale-105"
-                  : "border border-gray-300"
-              }`}
-              onClick={() => setCurrentIndex(index)}
-              whileHover={{ scale: 1.1 }}
-            />
-          ))}
-        </div>
+    <aside className="flex flex-col items-center w-full  p-4 space-y-6">
+      <div
+        className="relative w-full h-64 md:h-80  overflow-hidden cursor-pointer transition-transform hover:scale-105"
+        onClick={() => setIsFullscreen(true)}
+      >
+        <motion.img
+          src={images[currentIndex]}
+          alt={name}
+          className="w-full h-full object-contain"
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.3 }}
+        />
       </div>
+
+      <div className="flex justify-center items-center  flex-wrap gap-2">
+        {images.map((image, index) => (
+          <motion.img
+            key={index}
+            src={image}
+            alt={`Thumbnail ${index + 1}`}
+            className={`w-16 h-16 md:w-20 md:h-20 object-cover rounded-lg cursor-pointer border-2 transition-all m-0 ${
+              index === currentIndex ? "border-red-500" : "border-gray-300"
+            }`}
+            onClick={() => setCurrentIndex(index)}
+            whileHover={{ scale: 1.1 }}
+          />
+        ))}
+      </div>
+
+      {videoLink && (
+        <div className="w-full hidden md:block ">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 ">
+            Prezentare Video
+          </h3>
+          <div className="aspect-w-16 aspect-h-9">
+            <iframe
+              src={getEmbedLink(videoLink) || ""}
+              title="Product Video"
+              allowFullScreen
+              className="w-full h-80 rounded-lg shadow-lg"
+            ></iframe>
+          </div>
+        </div>
+      )}
+
+      <AnimatePresence>
+      {isFullscreen && (
+  <div className="absolute inset-0 bg-white flex items-center justify-center z-50">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="relative flex flex-col items-center justify-center w-full h-full p-4"
+    >
+      <motion.img
+        src={images[currentIndex]}
+        alt={name}
+        className="max-w-full max-h-[80vh] md:max-w-4xl shadow-lg"
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.8 }}
+        transition={{ duration: 0.3 }}
+      />
+
+      <div className="absolute top-4 right-4 flex gap-2 sm:top-6 sm:right-6">
+        <button
+          onClick={() => setIsFullscreen(false)}
+          className="text-gray-400 hover:text-gray-600 transition-all"
+        >
+          <FontAwesomeIcon icon={faTimes} size="lg" />
+        </button>
+      </div>
+
+      <div className="absolute left-2 top-1/2 transform -translate-y-1/2 flex gap-4 sm:left-6">
+        <button
+          onClick={handlePrev}
+          className="bg-white shadow-md text-black cursor-pointer opacity-80 hover:opacity-100 transition-opacity duration-300 rounded-full p-2 sm:p-3"
+        >
+          <FontAwesomeIcon icon={faChevronLeft} size="lg" />
+        </button>
+      </div>
+
+      <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-4 sm:right-6">
+        <button
+          onClick={handleNext}
+          className="bg-white shadow-md text-black cursor-pointer opacity-80 hover:opacity-100 transition-opacity duration-300 rounded-full p-2 sm:p-3"
+        >
+          <FontAwesomeIcon icon={faChevronRight} size="lg" />
+        </button>
+      </div>
+
+      <div className="absolute bottom-4 flex flex-wrap gap-2  px-4 sm:bottom-6">
+        {images.map((image, index) => (
+          <motion.img
+            key={index}
+            src={image}
+            alt={`Thumbnail ${index + 1}`}
+            className={`w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-md cursor-pointer border-2 transition-all duration-200 ${
+              index === currentIndex
+                ? "border-red-500 opacity-100"
+                : "border-gray-500 opacity-70"
+            }`}
+            onClick={() => setCurrentIndex(index)}
+            whileHover={{ scale: 1.1 }}
+          />
+        ))}
+      </div>
+    </motion.div>
+  </div>
+)}
+
+      </AnimatePresence>
     </aside>
   );
 };

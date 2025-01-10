@@ -11,9 +11,7 @@ const ProductsPageContent = () => {
 
   return (
     <section className="mt-[104px] md:mt-[188px] px-6 lg:px-20 min-h-[50vh]">
-      <h1 className="text-center text-3xl font-semibold mb-8 text-gray-800 tracking-wide">
-        Găsește Produsele Perfecte Pentru Tine
-      </h1>
+      
 
       {category && subCategory ? (
         <CardSectionProducts

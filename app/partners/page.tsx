@@ -34,9 +34,12 @@ const PartnersPage: React.FC = () => {
   return (
     <section className="mt-[104px] md:mt-[188px] px-6 lg:px-20 py-12 min-h-[50vh]">
       <div className="mb-12 text-center">
-        <h1 className="text-4xl font-extrabold text-gray-900">Cataloge și Parteneri</h1>
+        <h1 className="text-4xl font-extrabold text-gray-900">
+          Cataloge și Parteneri
+        </h1>
         <p className="text-lg text-gray-600 mt-4">
-          Alegeți un partener pentru a vizualiza mai multe detalii despre catalog.
+          Alegeți un partener pentru a vizualiza mai multe detalii despre
+          catalog.
         </p>
       </div>
 
@@ -53,7 +56,7 @@ const PartnersPage: React.FC = () => {
                   src={partner.imageUrl}
                   alt={partner.name}
                   fill
-                  className="object-contain p-4"
+                  className="object-cover transition-transform duration-300 hover:scale-105"
                   unoptimized
                 />
               ) : (
@@ -64,10 +67,13 @@ const PartnersPage: React.FC = () => {
             </div>
 
             <div className="px-4 py-3 bg-gray-50 border-t">
-              <h3 className="text-lg font-bold text-gray-800">{partner.name}</h3>
-              <p className="text-sm text-gray-500 mt-2 line-clamp-2">
-                {partner.description || "No description available"}
-              </p>
+              <h3 className="text-lg font-bold text-gray-800">
+                {partner.name}
+              </h3>
+              <p
+                className="text-sm text-gray-500 mt-2 line-clamp-1"
+                dangerouslySetInnerHTML={{ __html: partner.description }}
+              ></p>
             </div>
 
             <div className="flex justify-between items-center px-4 py-3 bg-white">
@@ -77,7 +83,8 @@ const PartnersPage: React.FC = () => {
                   target="_blank"
                   rel="noreferrer"
                   whileHover={{ scale: 1.05 }}
-                  className="text-sm bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-600 transition-all"
+                  className="bg-blue-gradient from-blue-500 to-blue-700 text-white py-2 px-6 text-sm font-medium rounded-full transition-all duration-200 shadow-lg inline-block text-center"
+
                 >
                   Catalog
                 </motion.a>
@@ -85,7 +92,8 @@ const PartnersPage: React.FC = () => {
               <motion.button
                 onClick={() => handleViewProducts(partner.name)}
                 whileHover={{ scale: 1.05 }}
-                className="text-sm bg-red-500 text-white py-2 px-4 rounded-lg shadow hover:bg-red-600 transition-all"
+                whileTap={{ scale: 0.95 }}
+                className="bg-red-gradient from-red-500 to-red-700 text-sm  text-white py-2 px-6 rounded-full shadow transition-all"
               >
                 Produse
               </motion.button>

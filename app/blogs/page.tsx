@@ -97,9 +97,10 @@ const BlogPageContent = () => {
                 </div>
 
                 <div className="w-full md:w-1/2 flex flex-col justify-center">
-                  <p className="text-gray-700 leading-relaxed text-center md:text-left">
-                    {caption.text}
-                  </p>
+                  <div
+                    className="text-gray-700 leading-relaxed text-center md:text-left prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: caption.text }}
+                  />
                 </div>
               </div>
             ))}

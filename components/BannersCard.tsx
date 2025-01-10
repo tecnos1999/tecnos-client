@@ -27,8 +27,7 @@ const BannersCard: React.FC<BannersCardProps> = ({ icon, title, content,onClick 
         )}
         <h3 className="text-lg font-bold text-center mt-2">{title}</h3>
       </div>
-      <div className="bg-white text-center p-4">
-        <p>{content}</p>
+      <div className="bg-white text-center p-4" dangerouslySetInnerHTML={{ __html: content }}>
       </div>
     </motion.div>
   );

@@ -81,7 +81,9 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
     onClose();
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
@@ -120,7 +122,6 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
         animate="visible"
         exit="exit"
       >
-        {/* Titlul fix */}
         <div className="sticky top-0 bg-white p-5 border-b shadow-md z-10">
           <button
             onClick={onClose}
@@ -133,10 +134,15 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
           </h2>
         </div>
 
-        {/* Conținut scrollabil */}
         <div className="overflow-y-auto px-5 py-4 max-h-[60vh]">
-          <p className="text-md text-gray-700 mb-3">{shortDescription}</p>
-          <p className="text-sm text-gray-600 mb-5">{longDescription}</p>
+          <p
+            className="text-md text-gray-700 mb-3"
+            dangerouslySetInnerHTML={{ __html: shortDescription }}
+          ></p>
+          <p
+            className="text-sm text-gray-600 mb-5"
+            dangerouslySetInnerHTML={{ __html: longDescription }}
+          ></p>
 
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Produse asociate:
@@ -160,7 +166,9 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
                     className="p-3 border rounded-lg shadow-sm hover:shadow-md transition relative flex flex-col items-center"
                   >
                     <img
-                      src={product.images?.[0] || "https://via.placeholder.com/150"}
+                      src={
+                        product.images?.[0] || "https://via.placeholder.com/150"
+                      }
                       alt={product.name}
                       className="w-full h-36 object-cover rounded-md"
                     />
@@ -168,7 +176,9 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
                       <h4 className="text-sm font-medium text-gray-800">
                         {product.name}
                       </h4>
-                      <p className="text-xs text-gray-600">SKU: {product.sku}</p>
+                      <p className="text-xs text-gray-600">
+                        SKU: {product.sku}
+                      </p>
                     </div>
                     <input
                       type="checkbox"
@@ -220,14 +230,21 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
           </form>
         </div>
 
-        {/* Butonul fix */}
         <div className="sticky bottom-0 bg-white p-4 border-t shadow-md flex justify-end z-10">
           <button
             type="button"
             onClick={handleRequestOffer}
-            disabled={selectedProducts.length === 0 || !formData.fullName || !formData.email || !formData.phone}
+            disabled={
+              selectedProducts.length === 0 ||
+              !formData.fullName ||
+              !formData.email ||
+              !formData.phone
+            }
             className={`text-white px-5 py-2 rounded-md text-sm transition-all ${
-              selectedProducts.length > 0 && formData.fullName && formData.email && formData.phone
+              selectedProducts.length > 0 &&
+              formData.fullName &&
+              formData.email &&
+              formData.phone
                 ? "bg-red-500 hover:bg-red-600"
                 : "bg-gray-300 cursor-not-allowed"
             }`}

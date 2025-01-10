@@ -58,7 +58,7 @@ const TestimonialContainer: React.FC = () => {
     <div className="py-16 px-4 sm:px-6 md:px-8 relative overflow-hidden mx-auto max-w-screen-xl">
       <div className="text-center mb-10">
         <h3 className="text-lg sm:text-xl md:text-2xl text-red-600 mb-2">
-          Ce spun clienții noștri
+          Ce spun clientii nostri
         </h3>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-black">
           TESTIMONIALE
@@ -88,7 +88,7 @@ const TestimonialContainer: React.FC = () => {
       </motion.div>
 
       <AnimatePresence mode="wait">
-        <div className="overflow-x-scroll md:overflow-hidden flex md:items-center md:justify-center gap-6">
+        <div className="overflow-x-scroll md:overflow-hidden flex md:items-center md:justify-center gap-6 p-4">
           {currentTestimonials.map((testimonial, index) => (
             <motion.div
               key={`${currentPage}-${index}`}

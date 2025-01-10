@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronRight,
+  faChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
 import CategoryService from "@/shared/category/service/CategoryService";
 import { Category } from "@/shared/category/models/Category";
 import { MainSection } from "@/shared/category/enum/MainSection";
@@ -10,7 +13,9 @@ import { MainSectionLabels } from "@/shared/category/enum/MainSectionLabels";
 import { determinePath } from "@/utils/utils";
 
 const Navbar: React.FC = () => {
-  const [hoveredSection, setHoveredSection] = useState<MainSection | null>(null);
+  const [hoveredSection, setHoveredSection] = useState<MainSection | null>(
+    null
+  );
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [hideTimeout, setHideTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -81,7 +86,6 @@ const Navbar: React.FC = () => {
       itemCategory: encodeURIComponent(itemCategory),
     });
 
-    
     router.push(determinePath(`products?${queryParams.toString()}`));
   };
 
@@ -90,7 +94,6 @@ const Navbar: React.FC = () => {
       router.push(determinePath(`series?name=${encodeURIComponent(category)}`));
     }
   };
-  
 
   return (
     <nav className="bg-white mx-auto hidden md:flex cursor-pointer">
@@ -113,9 +116,7 @@ const Navbar: React.FC = () => {
                       ? "text-red-700"
                       : "text-gray-500 hover:text-red-700"
                   }`}
-                onClick={() => handleMainSectionClick(section)}
-
-                
+                  onClick={() => handleMainSectionClick(section)}
                 >
                   {MainSectionLabels[section]}
                   {hoveredSection === section && hasCategories && (
@@ -138,10 +139,10 @@ const Navbar: React.FC = () => {
                 <AnimatePresence>
                   {hoveredSection === section && hasCategories && (
                     <motion.div
-                     className={`absolute left-0  pt-0 shadow-lg ${
+                      className={`absolute left-0  pt-0 shadow-lg ${
                         section === MainSection.APLICATII_TEHNOLOGIE
-                          ? "w-1/3 min-h-[30vh] left-[40%] top-[50%] transform -translate-x-1/2" 
-                          : "w-full min-h-[60vh] top-[100%]" 
+                          ? "w-1/3 min-h-[30vh] left-[40%] top-[50%] transform -translate-x-1/2"
+                          : "w-full min-h-[60vh] top-[100%]"
                       } flex z-10 bg-white border border-gray-200`}
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -149,7 +150,13 @@ const Navbar: React.FC = () => {
                       transition={{ duration: 0.3 }}
                       onMouseLeave={handleMouseLeave}
                     >
-                      <motion.div className="w-1/4 bg-gray-100 p-4 border-r border-gray-200">
+                      <motion.div
+                        className={` bg-gray-100 ${
+                          section === MainSection.APLICATII_TEHNOLOGIE
+                            ? "w-full"
+                            : "w-1/3"
+                        } p-4 border-r border-gray-200`}
+                      >
                         {categories
                           .filter((cat) => cat.mainSection === section)
                           .map((category) => (
@@ -161,9 +168,7 @@ const Navbar: React.FC = () => {
                               }
                               onClick={() => handleCategoryClick(category.name)}
                             >
-                              <button
-                                className="text-left w-full font-medium"
-                              >
+                              <button className="text-left w-full font-medium">
                                 {category.name}
                               </button>
                               {category.subCategories?.length > 0 && (
@@ -176,7 +181,13 @@ const Navbar: React.FC = () => {
                           ))}
                       </motion.div>
 
-                      <div className="w-3/4 p-6 bg-white grid grid-cols-3 gap-8">
+                      <div
+                        className={` ${
+                          section === MainSection.APLICATII_TEHNOLOGIE
+                            ? "none"
+                            : "p-6  grid grid-cols-3 gap-8 w-3/4 bg-white"
+                        }`}
+                      >
                         {hoveredCategory &&
                           categories
                             .find((cat) => cat.name === hoveredCategory)

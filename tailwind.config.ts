@@ -15,7 +15,9 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       backgroundImage: {
-        'red-gradient': 'linear-gradient(135deg, #b91c1c, #f87171)', 
+        'red-gradient': 'linear-gradient(135deg, #b91c1c, #f87171)',
+        'blue-gradient': 'linear-gradient(135deg, #1e3a8a, #2563eb, #3b82f6, #60a5fa)',
+
       },
     },
   },
