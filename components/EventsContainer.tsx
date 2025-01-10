@@ -107,7 +107,6 @@ const EventsContainer: React.FC = () => {
               <EventCard
                 image={event.imageUrl || ""}
                 title={event.title}
-                subtitle={event.description}
                 description={event.description || ""}
               />
             </motion.div>

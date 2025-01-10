@@ -7,14 +7,12 @@ import Image from "next/image";
 interface EventCardProps {
   image: string;
   title: string;
-  subtitle: string;
   description: string;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
   image,
   title,
-  subtitle,
   description,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
