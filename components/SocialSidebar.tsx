@@ -2,12 +2,11 @@
 import React from "react";
 import { FiFacebook, FiLinkedin, FiInstagram, FiYoutube } from "react-icons/fi";
 import { motion } from "framer-motion";
-import { FaWhatsapp } from "react-icons/fa"; // Importăm iconița de WhatsApp
+import { FaWhatsapp } from "react-icons/fa";
 
 const SocialSidebar = () => {
   return (
     <>
-      {/* Bara socială verticală, centrată pe mijloc */}
       <div className="fixed right-4 top-1/2 transform -translate-y-1/2 space-y-4 z-25">
         <div className="flex flex-col items-center space-y-4">
           {[
@@ -49,9 +48,8 @@ const SocialSidebar = () => {
         </div>
       </div>
 
-      {/* Butonul de WhatsApp, poziționat jos */}
       <motion.a
-        href="https://wa.me/123456789" // Link către WhatsApp
+        href="https://wa.me/123456789"
         className="fixed right-4 bottom-4 w-14 h-14 flex items-center justify-center rounded-full shadow-xl text-white bg-green-500 hover:bg-green-600 transition-transform transform hover:scale-110 z-30"
         whileHover={{ scale: 1.2 }}
         transition={{ type: "spring", stiffness: 800, damping: 15 }}
