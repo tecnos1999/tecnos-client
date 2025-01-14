@@ -10,13 +10,17 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <main className="p-8 flex flex-col">
+    <main 
+   
+      className="min-h-screen p-8 flex flex-col relative pb-24 "
+    >
       <motion.div
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col bg-white overflow-hidden p-4 "
+        className="flex flex-col bg-white overflow-hidden p-4"
       >
         <div className="mb-4">
           <h1 className="text-4xl font-extrabold text-gray-800">
@@ -25,15 +29,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           <p className="text-gray-500 text-sm mt-1">SKU: {product.sku}</p>
         </div>
 
-        <motion.button
-          onClick={() => setIsModalOpen(true)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="w-[30vh] py-2 md:py-4  bg-red-gradient from-red-500 to-red-700 text-white font-bold text-lg rounded-full self-center mt-6"
-        >
-          Cerere Ofertă
-        </motion.button>
-
         {product.description ? (
           <div className="mt-4 space-y-4">
             {product.description.split("\n").map((text, index) => (
@@ -41,14 +36,14 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                 key={index}
                 className="text-gray-700 leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: text }}
-              ></p>
+              />
             ))}
           </div>
         ) : (
-          <p className="text-gray-500 italic">
-            Descrierea nu este disponibilă.
-          </p>
+          <p className="text-gray-500 italic">Descrierea nu este disponibilă.</p>
         )}
+
+        {/* Butoane de fișe tehnice și brosuri */}
         <div className="flex flex-wrap gap-4 mt-6">
           {[
             {
@@ -57,7 +52,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
               colors: "from-blue-500 to-blue-700",
             },
             {
-              label: "Broschure",
+              label: "Broșură",
               url: product.broschure,
               colors: "from-yellow-500 to-yellow-700",
             },
@@ -76,6 +71,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             ))}
         </div>
 
+        {/* Video */}
         {product.linkVideo && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -96,22 +92,24 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             </div>
           </motion.div>
         )}
+      </motion.div>
 
+      <div className="sticky bottom-0 left-0 right-0 bg-white p-4">
         <motion.button
           onClick={() => setIsModalOpen(true)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="w-1/2 py-2 md:py-4 md:w-full bg-red-gradient from-red-500 to-red-700 text-white font-bold text-lg rounded-full self-center mt-6"
+          className="w-full py-3 bg-red-gradient from-red-500 to-red-700 text-white font-bold text-lg rounded-full"
         >
           Cerere Ofertă
         </motion.button>
+      </div>
 
-        <ModalProductOffer
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          product={product}
-        />
-      </motion.div>
+      <ModalProductOffer
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        product={product}
+      />
     </main>
   );
 };

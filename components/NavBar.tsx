@@ -27,6 +27,7 @@ const Navbar: React.FC = () => {
       try {
         const categoryService = new CategoryService();
         const data = await categoryService.getCategories();
+        console.log(data);
         setCategories(data);
       } catch (error) {
         console.error("Failed to fetch categories:", error);

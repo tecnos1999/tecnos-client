@@ -7,6 +7,8 @@ import { SeriesDTO } from "@/shared/series/dto/SeriesDTO";
 import { BlogDTO } from "@/shared/blog/dto/BlogDTO";
 import SeriesService from "@/shared/series/services/SeriesService";
 import BlogService from "@/shared/blog/services/BlogService";
+import Link from "next/link";
+import { determinePath } from "@/utils/utils";
 
 const SeriesPageContent = () => {
   const searchParams = useSearchParams();
@@ -75,9 +77,10 @@ const SeriesPageContent = () => {
           <h1 className="text-4xl md:text-6xl font-bold tracking-wide drop-shadow-lg">
             {series.name}
           </h1>
-          <p className="mt-6 text-base md:text-lg leading-relaxed drop-shadow-lg">
-            {series.description}
-          </p>
+          <p
+            className="mt-6 text-base md:text-lg leading-relaxed drop-shadow-lg"
+            dangerouslySetInnerHTML={{ __html: series.description }}
+          ></p>
         </motion.div>
       </motion.section>
 
@@ -85,75 +88,73 @@ const SeriesPageContent = () => {
         {blogs.length > 0 ? (
           <div className="space-y-16">
             {blogs.map((blog, index) => (
-              <motion.div
+              <motion.article
                 key={blog.code}
-                className={`flex flex-col ${
-                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                } items-center gap-6`}
+                className="relative w-full pb-4"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
                 <motion.div
-                  className="w-full md:w-1/2 rounded-lg shadow-lg overflow-hidden"
-                  style={{
-                    backgroundImage: `url(${blog.mainPhotoUrl})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                >
-                  <div style={{ paddingTop: "56.25%" }}></div>
-                </motion.div>
-
-                <motion.div
-                  className="w-full md:w-1/2"
-                  initial={{ opacity: 0, x: index % 2 === 0 ? 30 : -30 }}
+                  className={`${
+                    index % 2 === 0
+                      ? "float-left mr-4 mb-4"
+                      : "float-right ml-4 mb-4"
+                  } w-full md:w-1/3  `}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? 50 : -50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6 }}
                   viewport={{ once: true }}
                 >
-                  <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-                    {blog.title}
-                  </h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {blog.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-4">
-                    {blog.viewUrl && (
-                      <motion.a
-                        href={blog.viewUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="inline-block px-6 py-3 rounded-full m-2 shadow-lg focus:outline-none 
-                                   transition-colors text-white 
-                                   bg-gradient-to-r from-red-500 to-red-700 
-                                   hover:from-red-600 hover:to-red-800"
-                      >
-                        Read More
-                      </motion.a>
-                    )}
-
-                    {blog.broschureUrl && (
-                      <motion.a
-                        href={blog.broschureUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="inline-block px-6 py-3 rounded-full m-2 shadow-lg focus:outline-none 
-                                   transition-colors bg-white border-2 border-red-500 text-red-500 
-                                   hover:bg-red-50"
-                      >
-                        Download Document
-                      </motion.a>
-                    )}
-                  </div>
+                  <img
+                    src={
+                      blog.mainPhotoUrl || "https://via.placeholder.com/300x200"
+                    }
+                    alt={blog.title || "Blog image"}
+                    className="object-cover w-full h-auto rounded-lg"
+                    style={{ width: "600px", height: "500px" }}
+                  />
                 </motion.div>
-              </motion.div>
+
+                <h3 className="text-2xl font-semibold mb-4 text-gray-800">
+                  {blog.title}
+                </h3>
+                <p
+                  className="text-gray-600 mb-6 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: blog.description }}
+                ></p>
+
+                <div className="flex flex-wrap gap-4 mb-4">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Link
+                      href={determinePath(`blogs?code=${blog.code}`)}
+                      className="bg-red-gradient from-red-500 to-red-700 text-white py-2 px-6 text-sm font-medium rounded-full transition-all duration-200 shadow-lg inline-block text-center"
+                      
+                   >
+                      Citeste mai mult
+                    </Link>
+                  </motion.div>
+
+                  {blog.broschureUrl && (
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Link
+                        href={blog.broschureUrl}
+                        className="bg-blue-gradient from-blue-500 to-blue-700 text-white py-2 px-6 text-sm font-medium rounded-full transition-all duration-200 shadow-lg inline-block text-center"
+                      >
+                        Document
+                      </Link>
+                    </motion.div>
+                  )}
+                </div>
+                <div className="clear-both"></div>
+              </motion.article>
             ))}
           </div>
         ) : (

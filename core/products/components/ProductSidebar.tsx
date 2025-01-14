@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getEmbedLink } from "@/utils/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,7 +24,7 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const [isScrolled, setIsScrolled] = useState(false);
   if (!images || images.length === 0) {
     return (
       <p className="text-gray-400 text-center italic">No images available</p>
@@ -40,21 +40,36 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
+  useEffect(() => {
+    function handleScroll() {
+      if (window.scrollY > 96) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    }
 
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <>
       <aside className="flex flex-col items-center w-full p-4 space-y-6 h-full">
         <div className="flex flex-col items-center w-full space-y-4">
           <div
-            className="w-full h-[30vh] overflow-hidden cursor-pointer transition-transform hover:scale-105 pt-20"
+            className="w-full h-[45vh] overflow-hidden cursor-pointer transition-transform  "
             onClick={() => setIsFullscreen(true)}
           >
             <motion.img
               src={images[currentIndex]}
               alt={name}
-              className="w-full h-full object-contain "
-              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
+              className={`w-full h-full object-contain ${
+                isScrolled ? "pt-24" : ""
+              }`}
             />
           </div>
 

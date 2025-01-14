@@ -84,8 +84,6 @@ class ProductService extends ApiServer {
     }
   };
 
-
-
   getProductsByTagsName = async (tagNames: string[]): Promise<ProductDTO[]> => {
     const params = tagNames
       .map((tag) => `tagNames=${encodeURIComponent(tag)}`)
@@ -103,6 +101,31 @@ class ProductService extends ApiServer {
       return data as ProductDTO[];
     } else {
       throw new Error("Failed to fetch products by tags");
+    }
+  };
+
+  findBySkuIn = async (skus: string[]): Promise<ProductDTO[]> => {
+    if (!skus || skus.length === 0) {
+      throw new Error("SKU list cannot be empty.");
+    }
+
+    const params = new URLSearchParams();
+    skus.forEach((sku) => params.append("skus", sku));
+
+    const response = await this.api<null, ProductDTO[]>(
+      `/product/sku?${params.toString()}`,
+      "GET",
+      null,
+      ""
+    );
+
+    if (response.status === 200) {
+      return await response.json();
+    } else {
+      const errorMessage = await response.text();
+      throw new Error(
+        `Failed to fetch products by SKUs. Server response: ${errorMessage}`
+      );
     }
   };
 }

@@ -11,25 +11,25 @@ const SocialSidebar = () => {
         <div className="flex flex-col items-center space-y-4">
           {[
             {
-              href: "https://facebook.com",
+              href: "https://www.facebook.com/tecnoserviceequipmentromania",
               icon: <FiFacebook />,
               bgColor: "bg-blue-600",
               hoverColor: "hover:bg-blue-700",
             },
             {
-              href: "https://linkedin.com",
+              href: "https://www.linkedin.com/company/tecnoservice-equipment/?viewAsMember=true",
               icon: <FiLinkedin />,
               bgColor: "bg-blue-500",
               hoverColor: "hover:bg-blue-600",
             },
             {
-              href: "https://instagram.com",
+              href: "https://www.instagram.com/tecnoserviceequipment/",
               icon: <FiInstagram />,
               bgColor: "bg-pink-500",
               hoverColor: "hover:bg-pink-600",
             },
             {
-              href: "https://youtube.com",
+              href: "http://www.youtube.com/@tecnoserviceequipment1374",
               icon: <FiYoutube />,
               bgColor: "bg-red-600",
               hoverColor: "hover:bg-red-700",
@@ -49,8 +49,8 @@ const SocialSidebar = () => {
       </div>
 
       <motion.a
-        href="https://wa.me/123456789"
-        className="fixed right-4 bottom-12 w-16 h-16 flex items-center justify-center rounded-full shadow-xl text-white bg-green-500 hover:bg-green-600 transition-transform transform hover:scale-110 z-30"
+        href="https://wa.me/+40752171265"
+        className="fixed right-4 bottom-16 w-16 h-16 flex items-center justify-center rounded-full shadow-xl text-white bg-green-500 hover:bg-green-600 transition-transform transform hover:scale-110 z-30"
         whileHover={{ scale: 1.2 }}
         transition={{ type: "spring", stiffness: 800, damping: 15 }}
       >
