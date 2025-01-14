@@ -71,7 +71,8 @@ const Navbar: React.FC = () => {
 
     const route = routeMap[section];
     if (route) {
-      router.push(determinePath(route));
+      window.scrollTo(0, 0);
+      router.push(determinePath(route), undefined);
     }
   };
 
@@ -85,12 +86,13 @@ const Navbar: React.FC = () => {
       subCategory: encodeURIComponent(subCategory),
       itemCategory: encodeURIComponent(itemCategory),
     });
-
+    window.scrollTo(0, 0);
     router.push(determinePath(`products?${queryParams.toString()}`));
   };
 
   const handleCategoryClick = (category: string) => {
     if (hoveredSection === MainSection.APLICATII_TEHNOLOGIE) {
+      window.scrollTo(0, 0);
       router.push(determinePath(`series?name=${encodeURIComponent(category)}`));
     }
   };
@@ -143,7 +145,7 @@ const Navbar: React.FC = () => {
                         section === MainSection.APLICATII_TEHNOLOGIE
                           ? "w-1/3 min-h-[30vh] left-[40%] top-[50%] transform -translate-x-1/2"
                           : "w-full min-h-[60vh] top-[100%]"
-                      } flex z-10 bg-white border border-gray-200`}
+                      } flex z-10 bg-white border border-gray-200  max-h-[60vh]`}
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
@@ -155,14 +157,14 @@ const Navbar: React.FC = () => {
                           section === MainSection.APLICATII_TEHNOLOGIE
                             ? "w-full"
                             : "w-1/3"
-                        } p-4 border-r border-gray-200`}
+                        } p-4 border-r border-gray-200 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}
                       >
                         {categories
                           .filter((cat) => cat.mainSection === section)
                           .map((category) => (
                             <div
                               key={category.name}
-                              className="flex items-center justify-between text-gray-800 hover:text-red-700 hover:bg-gray-200 p-3 rounded transition-all"
+                              className="flex items-center justify-between text-gray-800 hover:text-red-700 hover:bg-gray-200 p-3 rounded transition-all "
                               onMouseEnter={() =>
                                 handleCategoryHover(category.name)
                               }
@@ -185,7 +187,7 @@ const Navbar: React.FC = () => {
                         className={` ${
                           section === MainSection.APLICATII_TEHNOLOGIE
                             ? "none"
-                            : "p-6  grid grid-cols-3 gap-8 w-3/4 bg-white"
+                            : "p-6  grid grid-cols-3 gap-8 w-3/4 bg-white overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
                         }`}
                       >
                         {hoveredCategory &&
@@ -207,11 +209,11 @@ const Navbar: React.FC = () => {
                                     {subCategory.name}
                                   </button>
                                 </h3>
-                                <ul className="pl-6 space-y-1">
+                                <ul className="pl-6 space-y-1 flex flex-col items-start ">
                                   {subCategory.itemCategories?.map((item) => (
                                     <li
                                       key={item.name}
-                                      className="text-gray-600 hover:text-red-700 transition-colors"
+                                      className="text-gray-600 hover:text-red-700 transition-colors "
                                     >
                                       <button
                                         onClick={() =>
@@ -221,6 +223,7 @@ const Navbar: React.FC = () => {
                                             item.name
                                           )
                                         }
+                                        className="text-left"
                                       >
                                         {item.name}
                                       </button>

@@ -9,14 +9,14 @@ import {
   faBars,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import logo from "@/assets/logo.png";
 import CategoryService from "@/shared/category/service/CategoryService";
 import { Category } from "@/shared/category/models/Category";
 import { MainSection } from "@/shared/category/enum/MainSection";
-import Image from "next/image";
-import logo from "@/assets/logo.png";
 import { MainSectionLabels } from "@/shared/category/enum/MainSectionLabels";
 import { determinePath } from "@/utils/utils";
-import { useRouter } from "next/navigation";
 
 const BurgerMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -71,8 +71,8 @@ const BurgerMenu: React.FC = () => {
     const routeMap: Record<MainSection, string> = {
       [MainSection.ACASA]: "/",
       [MainSection.PRODUSE]: "/",
-      [MainSection.APLICATII_TEHNOLOGIE]: "aplicatii&tehnologie",
-      [MainSection.PARTENERI]: "partners",
+      [MainSection.APLICATII_TEHNOLOGIE]: "/",
+      [MainSection.PARTENERI]: "/partners",
     };
 
     const route = routeMap[section];
@@ -86,6 +86,7 @@ const BurgerMenu: React.FC = () => {
 
   return (
     <>
+      {/* Toggle Button */}
       <div className="flex justify-end md:hidden p-4 cursor-pointer">
         <motion.div
           className="bg-red-700 grid place-content-center rounded-lg p-2 shadow-lg"
@@ -97,22 +98,22 @@ const BurgerMenu: React.FC = () => {
         </motion.div>
       </div>
 
+      {/* Burger Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed top-0 left-0 w-full h-full bg-white z-50 flex flex-col p-4 overflow-y-auto shadow-lg"
+            className="fixed top-0 left-0 w-full h-full bg-white z-50 flex flex-col p-4 overflow-y-auto shadow-lg scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            {/* Header */}
             <header className="flex justify-between items-center mb-4 border-b pb-2">
               <Image
                 src={logo}
                 alt="Logo"
-                width={120}
-                height={40}
+                width={240}
+                height={60}
                 unoptimized
               />
               <button
@@ -123,24 +124,20 @@ const BurgerMenu: React.FC = () => {
               </button>
             </header>
 
-            {/* Search Bar */}
-            <div className="flex items-center mb-6">
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  placeholder="Caută..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full p-3 pl-10 pr-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-red-700 placeholder-gray-500 text-gray-700"
-                />
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                />
-              </div>
+            <div className="relative w-full mb-6">
+              <input
+                type="text"
+                placeholder="Caută..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full p-3 pl-10 pr-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-red-700 placeholder-gray-500 text-gray-700"
+              />
+              <FontAwesomeIcon
+                icon={faSearch}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              />
             </div>
 
-            {/* Sections */}
             <div className="space-y-6">
               {Object.values(MainSection).map((section) => {
                 const sectionCategories = filteredCategories.filter(
@@ -150,7 +147,7 @@ const BurgerMenu: React.FC = () => {
                 return (
                   <div key={section} className="space-y-3">
                     <button
-                      className="w-full text-left px-4 py-3 font-semibold flex justify-between items-center bg-gray-100 rounded-lg shadow-md hover:bg-gray-200"
+                      className="w-full text-left px-4 py-3 font-semibold flex justify-between items-center  "
                       onClick={() => handleMainSectionClick(section)}
                     >
                       {MainSectionLabels[section]}
@@ -163,7 +160,7 @@ const BurgerMenu: React.FC = () => {
                       )}
                     </button>
 
-                    {/* Dropdown for Categories */}
+                    {/* Categories */}
                     {sectionCategories.length > 0 && (
                       <motion.ul
                         className="pl-6 mt-2 space-y-3 bg-gray-50 border-l-4 border-gray-200 rounded-lg"
@@ -174,6 +171,7 @@ const BurgerMenu: React.FC = () => {
                       >
                         {sectionCategories.map((category) => (
                           <li key={category.name}>
+                            {/* Category */}
                             <button
                               className="text-gray-700 hover:text-red-700 flex justify-between w-full px-2 py-2 rounded-lg hover:bg-gray-100"
                               onClick={() =>
@@ -189,17 +187,12 @@ const BurgerMenu: React.FC = () => {
                                 }
                                 size="sm"
                                 className="ml-2 text-gray-400 transition-transform duration-300"
-                                style={{
-                                  transform: isCategoryExpanded(category.name)
-                                    ? "rotate(0deg)"
-                                    : "",
-                                }}
                               />
                             </button>
 
-                            {/* Dropdown-ul pentru Subcategorii */}
+                            {/* Subcategories */}
                             {isCategoryExpanded(category.name) && (
-                              <ul className="pl-6 mt-2 space-y-2">
+                              <ul className="pl-4 mt-2 space-y-1">
                                 {category.subCategories?.map((subCategory) => (
                                   <li key={subCategory.name}>
                                     <button

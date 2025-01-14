@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductService from "@/shared/products/service/ProductService";
@@ -10,6 +9,8 @@ import ProductSidebar from "@/core/products/components/ProductSidebar";
 import ProductDetails from "@/core/products/components/ProductDetails";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { determinePath } from "@/utils/utils";
 
 const ITEMS_PER_PAGE = 4;
 
@@ -19,7 +20,7 @@ const ProductDetailsContent: React.FC = () => {
   const [product, setProduct] = useState<ProductDTO | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const router = useRouter();
   const [categoryProducts, setCategoryProducts] = useState<ProductDTO[]>([]);
   const [subcategoryProducts, setSubcategoryProducts] = useState<ProductDTO[]>(
     []
@@ -114,7 +115,7 @@ const ProductDetailsContent: React.FC = () => {
           src={prod.images?.[0] || "/fallback-image-url.jpg"}
           alt={prod.name || "Product Image"}
           fill
-          className="object-cover transition-transform duration-300 hover:scale-110"
+          className="object-fit transition-transform duration-300 "
           unoptimized
         />
       </div>
@@ -129,7 +130,9 @@ const ProductDetailsContent: React.FC = () => {
         ></p>
         <div className="mt-auto flex justify-between items-center">
           <motion.button
-            onClick={() => console.log(`Redirect to ${prod.sku}`)}
+            onClick={() => {
+              router.push(determinePath(`product?sku=${prod.sku}`));
+            }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="bg-red-gradient from-red-500 to-red-700 text-white py-2 px-6 w-full text-sm font-medium rounded-full transition-all duration-200 shadow-lg"
@@ -142,9 +145,16 @@ const ProductDetailsContent: React.FC = () => {
   );
 
   return (
-    <section className="mt-[104px] md:mt-[188px] px-4 sm:px-6 lg:px-20 min-h-screen bg-gradient-to-br from-gray-100 to-gray-50 py-12">
+    <section className="relative mt-[104px] md:mt-[200px] px-4 sm:px-6 lg:px-20 min-h-screen bg-gradient-to-br from-gray-100 to-gray-50 py-4">
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white rounded-lg shadow-lg">
-        <ProductSidebar images={product.images || null} name={product.name}   videoLink={product.linkVideo || null} />
+        <div className="sticky top-[60px] self-start h-auto overflow-y-auto">
+          <ProductSidebar
+            images={product.images || null}
+            name={product.name}
+            videoLink={product.linkVideo || null}
+          />
+        </div>
+
         <ProductDetails product={product} />
       </div>
 
@@ -164,7 +174,7 @@ const ProductDetailsContent: React.FC = () => {
               whileTap={{ scale: 0.95 }}
               className="mt-6 mx-auto block bg-red-gradient from-red-500 to-red-700 text-white py-2 px-6 rounded-full transition duration-200"
             >
-              Incarca mai multe
+              Încarcă mai multe
             </motion.button>
           )}
         </div>
@@ -173,7 +183,7 @@ const ProductDetailsContent: React.FC = () => {
       {subcategoryProducts.length > 0 && (
         <div className="max-w-screen-xl mx-auto mt-12 bg-white rounded-lg shadow-lg p-6 sm:p-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            Produse din aceeasi categorie
+            Produse din aceeași categorie
           </h2>
           <div className="grid place-content-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {displayedSubcategoryProducts.map(renderProductCard)}
@@ -186,11 +196,13 @@ const ProductDetailsContent: React.FC = () => {
               whileTap={{ scale: 0.95 }}
               className="mt-6 mx-auto block bg-red-gradient from-red-500 to-red-700 text-white py-2 px-6 rounded-full transition duration-200"
             >
-              Incarca mai multe
+              Încarcă mai multe
             </motion.button>
           )}
         </div>
       )}
+
+      
     </section>
   );
 };

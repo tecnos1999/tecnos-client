@@ -91,13 +91,54 @@ const ProductsContent: React.FC = () => {
 
   if (products.length === 0) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <span className="text-xl font-semibold text-gray-500">
-          Nu au fost găsite produse pentru acest partener.
+      <div className="min-h-screen py-10 px-4 md:px-8 bg-gradient-to-br from-white to-gray-100 p-6 rounded-xl relative">
+        {partner && (
+          <div className="max-w-screen-xl mx-auto mb-10">
+            <div className="flex flex-col md:flex-row items-start md:items-center transition-all duration-300 px-4 py-8">
+              <div className="w-full md:w-1/3 flex justify-center md:justify-start mb-4 md:mb-0">
+                <Image
+                  src={partner.imageUrl || "/fallback-image-url.jpg"}
+                  alt={`${partner.name} Logo`}
+                  width={400}
+                  height={400}
+                  className="object-contain rounded-md"
+                  unoptimized
+                />
+              </div>
+              <div className="w-full md:w-2/3 md:ml-8">
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                  {partner.name}
+                </h2>
+                <p
+                  className="text-gray-600 mb-6 text-sm leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: partner.description }}
+                />
+                {partner.catalogFile && (
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="inline-block"
+                  >
+                    <Link
+                      href={partner.catalogFile}
+                      passHref
+                      className="bg-blue-gradient from-blue-500 to-blue-700 text-white py-2 px-8 text-sm font-medium rounded-full transition-all duration-200 shadow-lg inline-block text-center"
+                    >
+                      Vezi Catalog
+                    </Link>
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+        <span className="absolute inset-0 flex items-center justify-center text-xl font-semibold text-gray-600 animate-pulse">
+          Nu există produse pentru acest partener.
         </span>
       </div>
     );
   }
+  
 
   return (
     <div className="min-h-screen py-10 px-4 md:px-8  bg-gradient-to-br from-white to-gray-100 p-6 rounded-xl">
@@ -108,9 +149,9 @@ const ProductsContent: React.FC = () => {
               <Image
                 src={partner.imageUrl || "/fallback-image-url.jpg"}
                 alt={`${partner.name} Logo`}
-                width={300}
-                height={300}
-                className="object-contain rounded-md   "
+                width={400}
+                height={400}
+                className="object-contain rounded-md "
                 unoptimized
               />
             </div>
@@ -174,7 +215,7 @@ const ProductsContent: React.FC = () => {
                 src={product.images?.[0] || "/fallback-image-url.jpg"}
                 alt={product.name || "Product Image"}
                 fill
-                className="object-fit transition-transform duration-300 hover:scale-110"
+                className="object-fit transition-transform duration-300"
                 unoptimized
               />
             </div>

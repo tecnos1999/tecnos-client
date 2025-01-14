@@ -9,7 +9,7 @@ import ModalNewsDetails from "@/core/news/ModalNewsDetails";
 
 const Banners: React.FC = () => {
   const [news, setNews] = useState<NewsDTO[]>([]);
-  const [selectedNews, setSelectedNews] = useState<NewsDTO | null>(null); // Pentru detalii
+  const [selectedNews, setSelectedNews] = useState<NewsDTO | null>(null); 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {

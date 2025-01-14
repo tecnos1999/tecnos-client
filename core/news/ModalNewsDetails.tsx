@@ -29,6 +29,7 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
+    company: "",
     email: "",
     phone: "",
     message: "",
@@ -77,7 +78,13 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
   const handleRequestOffer = () => {
     alert("Cerere de ofertă trimisă!");
     setSelectedProducts([]);
-    setFormData({ fullName: "", email: "", phone: "", message: "" });
+    setFormData({
+      fullName: "",
+      company: "",
+      email: "",
+      phone: "",
+      message: "",
+    });
     onClose();
   };
 
@@ -200,6 +207,14 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
               name="fullName"
               placeholder="Nume complet"
               value={formData.fullName}
+              onChange={handleInputChange}
+              className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+            />
+            <input
+              type="text"
+              name="company"
+              placeholder="Companie"
+              value={formData.company}
               onChange={handleInputChange}
               className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
             />

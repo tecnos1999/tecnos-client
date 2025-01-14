@@ -35,10 +35,10 @@ const PartnersPage: React.FC = () => {
     <section className="mt-[104px] md:mt-[188px] px-6 lg:px-20 py-12 min-h-[50vh]">
       <div className="mb-12 text-center">
         <h1 className="text-4xl font-extrabold text-gray-900">
-          Cataloge și Parteneri
+          Cataloge si Parteneri
         </h1>
         <p className="text-lg text-gray-600 mt-4">
-          Alegeți un partener pentru a vizualiza mai multe detalii despre
+          Alegeti un partener pentru a vizualiza mai multe detalii despre
           catalog.
         </p>
       </div>

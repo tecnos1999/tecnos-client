@@ -50,11 +50,11 @@ const SocialSidebar = () => {
 
       <motion.a
         href="https://wa.me/123456789"
-        className="fixed right-4 bottom-4 w-14 h-14 flex items-center justify-center rounded-full shadow-xl text-white bg-green-500 hover:bg-green-600 transition-transform transform hover:scale-110 z-30"
+        className="fixed right-4 bottom-12 w-16 h-16 flex items-center justify-center rounded-full shadow-xl text-white bg-green-500 hover:bg-green-600 transition-transform transform hover:scale-110 z-30"
         whileHover={{ scale: 1.2 }}
         transition={{ type: "spring", stiffness: 800, damping: 15 }}
       >
-        <FaWhatsapp className="text-3xl" />
+        <FaWhatsapp className="text-4xl" />
       </motion.a>
     </>
   );

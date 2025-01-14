@@ -114,7 +114,7 @@ const CardSectionProducts: React.FC<Props> = ({
                 src={product.images?.[0] || "/fallback-image-url.jpg"}
                 alt={product.name || "Product Image"}
                 fill
-                className="object-fit transition-transform duration-300 hover:scale-110"
+                className="object-fit transition-transform duration-300"
                 unoptimized
               />
             </div>
