@@ -10,7 +10,8 @@ const ProductsPageContent = () => {
   const itemCategory = searchParams.get("itemCategory");
 
   return (
-    <section className="mt-[104px] md:mt-[188px] px-6 lg:px-20 min-h-[50vh]">
+    <section className="mt-[104px] md:mt-[188px] px-6 lg:px-20 py-4 min-h-[50vh]">
+
       
 
       {category && subCategory ? (

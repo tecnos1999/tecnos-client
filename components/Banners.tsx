@@ -61,6 +61,7 @@ const Banners: React.FC = () => {
           shortDescription={selectedNews.shortDescription}
           longDescription={selectedNews.longDescription}
           tags={selectedNews.tags}
+          link={selectedNews.link}
         />
       )}
     </section>

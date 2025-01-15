@@ -14,6 +14,7 @@ interface ModalNewsDetailsProps {
   shortDescription: string;
   longDescription: string;
   tags: TagDTO[];
+  link?: string;
 }
 
 const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
@@ -23,6 +24,7 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
   shortDescription,
   longDescription,
   tags,
+  link,
 }) => {
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
@@ -33,6 +35,7 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
     email: "",
     phone: "",
     message: "",
+    judet: "",
   });
   const productService = new ProductService();
 
@@ -84,6 +87,7 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
       email: "",
       phone: "",
       message: "",
+      judet: "",
     });
     onClose();
   };
@@ -123,150 +127,197 @@ const ModalNewsDetails: React.FC<ModalNewsDetailsProps> = ({
         onClick={onClose}
       />
       <motion.div
-        className="relative bg-white w-full max-w-4xl rounded-lg shadow-lg z-60 overflow-hidden"
+        className="relative bg-white w-full max-w-7xl rounded-lg shadow-lg z-60 overflow-hidden"
         variants={modalVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
-        <div className="sticky top-0 bg-white p-5 border-b shadow-md z-10">
+        <div className="sticky top-0 bg-white p-6 border-b shadow-md z-10">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none text-base"
           >
             ×
           </button>
-          <h2 className="text-lg md:text-xl font-semibold text-gray-900">
-            {title}
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-900">{title}</h2>
         </div>
 
-        <div className="overflow-y-auto px-5 py-4 max-h-[60vh]">
-          <p
-            className="text-md text-gray-700 mb-3"
-            dangerouslySetInnerHTML={{ __html: shortDescription }}
-          ></p>
-          <p
-            className="text-sm text-gray-600 mb-5"
-            dangerouslySetInnerHTML={{ __html: longDescription }}
-          ></p>
-
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Produse asociate:
-          </h3>
-          {loading ? (
-            <p className="text-center text-gray-500 text-sm">Se încarcă...</p>
-          ) : products.length > 0 ? (
-            <div>
-              <button
-                onClick={handleSelectAllProducts}
-                className="mb-4 px-3 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600"
-              >
-                {selectedProducts.length === products.length
-                  ? "Deselectează toate"
-                  : "Selectează toate"}
-              </button>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {products.map((product) => (
-                  <li
-                    key={product.sku}
-                    className="p-3 border rounded-lg shadow-sm hover:shadow-md transition relative flex flex-col items-center"
-                  >
-                    <img
-                      src={
-                        product.images?.[0] || "https://via.placeholder.com/150"
-                      }
-                      alt={product.name}
-                      className="w-full h-36 object-cover rounded-md"
-                    />
-                    <div className="mt-3 text-center">
-                      <h4 className="text-sm font-medium text-gray-800">
-                        {product.name}
-                      </h4>
-                      <p className="text-xs text-gray-600">
-                        SKU: {product.sku}
-                      </p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={selectedProducts.includes(product.sku)}
-                      onChange={() => handleProductSelect(product.sku)}
-                      className="absolute top-3 right-3 h-3.5 w-3.5 accent-red-500 cursor-pointer"
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : (
-            <p className="text-gray-500 text-md">Nu există produse asociate.</p>
-          )}
-
-          <form className="mt-5 grid grid-cols-1 gap-4">
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Nume complet"
-              value={formData.fullName}
-              onChange={handleInputChange}
-              className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
-            />
-            <input
-              type="text"
-              name="company"
-              placeholder="Companie"
-              value={formData.company}
-              onChange={handleInputChange}
-              className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
-            />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Număr de telefon"
-              value={formData.phone}
-              onChange={handleInputChange}
-              className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
-            />
-            <textarea
-              name="message"
-              placeholder="Mesaj"
-              value={formData.message}
-              onChange={handleInputChange}
-              rows={3}
-              className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
-            ></textarea>
-          </form>
-        </div>
-
-        <div className="sticky bottom-0 bg-white p-4 border-t shadow-md flex justify-end z-10">
-          <button
-            type="button"
-            onClick={handleRequestOffer}
-            disabled={
-              selectedProducts.length === 0 ||
-              !formData.fullName ||
-              !formData.email ||
-              !formData.phone
-            }
-            className={`text-white px-5 py-2 rounded-md text-sm transition-all ${
-              selectedProducts.length > 0 &&
-              formData.fullName &&
-              formData.email &&
-              formData.phone
-                ? "bg-red-500 hover:bg-red-600"
-                : "bg-gray-300 cursor-not-allowed"
+        <div className="flex flex-col md:flex-row overflow-hidden">
+          {/* Coloana Stângă */}
+          <div
+            className={`flex-1 p-6 overflow-y-auto max-h-[80vh] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ${
+              products.length === 0 ? "w-full" : "w-2/3"
             }`}
           >
-            Trimite cerere de ofertă
-          </button>
+            <p
+              className="text-lg text-gray-700 mb-6"
+              dangerouslySetInnerHTML={{ __html: shortDescription }}
+            ></p>
+            <p
+              className="text-md text-gray-600 mb-8"
+              dangerouslySetInnerHTML={{ __html: longDescription }}
+            ></p>
+
+            {products.length > 0 && (
+              <>
+                <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                  Produse asociate:
+                </h3>
+                <button
+                  onClick={handleSelectAllProducts}
+                  className="mb-6 px-4 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600"
+                >
+                  {selectedProducts.length === products.length
+                    ? "Deselectează toate"
+                    : "Selectează toate"}
+                </button>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {products.map((product) => (
+                    <li
+                      key={product.sku}
+                      className="p-4 border rounded-lg shadow-sm hover:shadow-lg transition flex flex-col items-center"
+                    >
+                      <img
+                        src={
+                          product.images?.[0] ||
+                          "https://via.placeholder.com/150"
+                        }
+                        alt={product.name}
+                        className="w-full h-40 object-cover rounded-md"
+                      />
+                      <div className="mt-3 text-center">
+                        <h4 className="text-sm font-medium text-gray-800">
+                          {product.name}
+                        </h4>
+                        <p className="text-xs text-gray-600">
+                          SKU: {product.sku}
+                        </p>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={selectedProducts.includes(product.sku)}
+                        onChange={() => handleProductSelect(product.sku)}
+                        className="mt-2 accent-red-500 cursor-pointer"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+
+          {products.length > 0 && (
+            <div className="w-full md:w-1/3 p-6 bg-gray-50 border-l">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Trimite cerere de oferta
+              </h3>
+              <form className="grid grid-cols-1 gap-4">
+                <input
+                  type="text"
+                  name="fullName"
+                  placeholder="Nume complet"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+                  required
+                />
+                <input
+                  type="text"
+                  name="company"
+                  placeholder="Companie"
+                  value={formData.company}
+                  onChange={handleInputChange}
+                  className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+                  required
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+                  required
+                />
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Numar de telefon"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+                  required
+                />
+                <input
+                  type="text"
+                  name="judet"
+                  placeholder="Judet"
+                  value={formData.judet}
+                  onChange={handleInputChange}
+                  className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+                  required
+                />
+                <textarea
+                  name="message"
+                  placeholder="Mesaj"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  rows={4}
+                  className="p-3 border rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-sm"
+                ></textarea>
+              </form>
+              <div className="mt-6 flex justify-between">
+                {link && (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white px-5 py-2 rounded-md text-sm transition-all bg-blue-500 hover:bg-blue-600"
+                  >
+                    Vezi mai multe
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={handleRequestOffer}
+                  disabled={
+                    selectedProducts.length === 0 ||
+                    !formData.fullName ||
+                    !formData.email ||
+                    !formData.phone ||
+                    !formData.judet
+                  }
+                  className={`text-white px-5 py-2 rounded-md text-sm transition-all ${
+                    selectedProducts.length > 0 &&
+                    formData.fullName &&
+                    formData.email &&
+                    formData.phone &&
+                    formData.judet
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-gray-300 cursor-not-allowed"
+                  }`}
+                >
+                  Trimite cerere de oferta
+                </button>
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* Footer pentru butonul link, dacă nu sunt produse */}
+        {products.length === 0 && link && (
+          <div className="p-4 flex justify-center border-t bg-gray-50">
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white px-5 py-2 rounded-md text-sm transition-all bg-blue-500 hover:bg-blue-600"
+            >
+              Vezi mai multe
+            </a>
+          </div>
+        )}
       </motion.div>
     </div>
   );

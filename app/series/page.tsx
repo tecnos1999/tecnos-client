@@ -86,11 +86,11 @@ const SeriesPageContent = () => {
 
       <section className="px-6 lg:px-20 py-16 bg-gray-50">
         {blogs.length > 0 ? (
-          <div className="space-y-16">
+           <div className="space-y-8 max-w-5xl mx-auto">
             {blogs.map((blog, index) => (
               <motion.article
                 key={blog.code}
-                className="relative w-full pb-4"
+                className="clearfix mb-12"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
@@ -113,7 +113,7 @@ const SeriesPageContent = () => {
                     }
                     alt={blog.title || "Blog image"}
                     className="object-cover w-full h-auto rounded-lg"
-                    style={{ width: "600px", height: "500px" }}
+                    style={{ width: "500px", height: "300px" }}
                   />
                 </motion.div>
 

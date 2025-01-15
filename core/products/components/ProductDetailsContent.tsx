@@ -8,9 +8,9 @@ import ErrorScreen from "@/core/products/pages/ErrorScreen";
 import ProductSidebar from "@/core/products/components/ProductSidebar";
 import ProductDetails from "@/core/products/components/ProductDetails";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { determinePath } from "@/utils/utils";
+import ProductCard from "./ProductCard";
 
 const ITEMS_PER_PAGE = 4;
 
@@ -104,45 +104,12 @@ const ProductDetailsContent: React.FC = () => {
     setSubcategoryProductsPage((prevPage) => prevPage + 1);
   };
 
-  const renderProductCard = (prod: ProductDTO) => (
-    <motion.div
-      key={prod.sku}
-      className="relative w-full max-w-xs md:w-auto bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1"
-      whileHover={{ scale: 1.01 }}
-    >
-      <div className="relative w-full h-60 bg-gray-200 flex items-center justify-center">
-        <Image
-          src={prod.images?.[0] || "/fallback-image-url.jpg"}
-          alt={prod.name || "Product Image"}
-          fill
-          className="object-fit transition-transform duration-300 "
-          unoptimized
-        />
-      </div>
-
-      <div className="p-4 flex flex-col h-[calc(100%-240px)]">
-        <h3 className="text-lg font-semibold text-gray-700 mb-2 line-clamp-2 leading-tight">
-          {prod.name}
-        </h3>
-        <p
-          className="text-gray-600 text-sm mb-4 line-clamp-1"
-          dangerouslySetInnerHTML={{ __html: prod.description }}
-        ></p>
-        <div className="mt-auto flex justify-between items-center">
-          <motion.button
-            onClick={() => {
-              router.push(determinePath(`product?sku=${prod.sku}`));
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-red-gradient from-red-500 to-red-700 text-white py-2 px-6 w-full text-sm font-medium rounded-full transition-all duration-200 shadow-lg"
-          >
-            Vezi detalii
-          </motion.button>
-        </div>
-      </div>
-    </motion.div>
-  );
+  const redirectToProductDetails = (sku: string) => {
+    const queryParams = new URLSearchParams({
+      sku: encodeURIComponent(sku),
+    });
+    router.push(determinePath(`product?${queryParams.toString()}`));
+  };
 
   return (
     <section className="relative mt-[104px] md:mt-[200px] px-4 sm:px-6 lg:px-20 min-h-screen bg-gradient-to-br from-gray-100 to-gray-50 py-4">
@@ -164,7 +131,13 @@ const ProductDetailsContent: React.FC = () => {
             Produse similare
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {displayedCategoryProducts.map(renderProductCard)}
+            {displayedCategoryProducts.map((product) => (
+              <ProductCard
+                key={product.sku}
+                product={product}
+                onClick={redirectToProductDetails}
+              />
+            ))}
           </div>
 
           {displayedCategoryProducts.length < categoryProducts.length && (
@@ -186,7 +159,13 @@ const ProductDetailsContent: React.FC = () => {
             Produse din aceeași categorie
           </h2>
           <div className="grid place-content-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {displayedSubcategoryProducts.map(renderProductCard)}
+            {displayedSubcategoryProducts.map((product) => (
+              <ProductCard
+                key={product.sku}
+                product={product}
+                onClick={redirectToProductDetails}
+              />
+            ))}
           </div>
 
           {displayedSubcategoryProducts.length < subcategoryProducts.length && (
@@ -201,8 +180,6 @@ const ProductDetailsContent: React.FC = () => {
           )}
         </div>
       )}
-
-      
     </section>
   );
 };
